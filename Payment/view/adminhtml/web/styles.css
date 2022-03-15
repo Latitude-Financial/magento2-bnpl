@@ -1,0 +1,5 @@
+#row_payment_au_latitude_section_latitude .section-config {border:0;}
+.complex.lattitude-payment-section .lattitude-payment-logo { display:inline-block; vertical-align: middle; margin: 0 20px 0 0px; width: 200px; height:60px; background-repeat: no-repeat, no-repeat, no-repeat; background-image: url('images/latitudepay.png'); }
+.complex.lattitude-payment-section .lattitude-payment-byline, .complex.genoapay-payment-section .genoapay-payment-byline { display: inline-block; vertical-align: top; width: 50%;font-weight: normal; }
+.complex.lattitude-payment-section .button-container ,.complex.genoapay-payment-section .button-container{ float:right; }
+.complex.genoapay-payment-section .genoapay-payment-logo  { display:inline-block; vertical-align: middle; margin: 0 20px 0 0px; width: 200px; height:60px; background-repeat: no-repeat, no-repeat, no-repeat; background-image: url('images/genoapay.png'); }

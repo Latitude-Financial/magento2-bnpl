@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package   LatitudeNew_Payment
+ * @author    Lpay Team <integrationsupport@latitudefinancial.com>
+ */
+-->
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
+    <groups>
+        <group id="installment">
+            <label>Installment Payment Methods</label>
+        </group>
+    </groups>
+    <methods>
+        <method name="latitudepay">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+        <method name="genoapay">
+            <allow_multiple_address>1</allow_multiple_address>
+        </method>
+    </methods>
+</payment>

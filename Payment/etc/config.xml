@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Latitude Payment module
+ *
+ * For the full copyright and license information, please view the NOTICE
+ * and LICENSE files that were distributed with this source code.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <latitudepay>
+                <active>1</active>
+                <order_status>pending_approval</order_status>
+                <title>LatitudePay</title>
+                <can_use_checkout>1</can_use_checkout>
+                <payment_action>true</payment_action>
+                <line_items_enabled>1</line_items_enabled>
+                <group>offline</group>
+                <currency>AUD</currency>
+                <allowspecific>0</allowspecific>
+                <specificcountry>AU,NZ</specificcountry>
+                <installment_no>10</installment_no>
+                <image_api_url>https://images.latitudepayapps.com/v2</image_api_url>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <success_url>latitudepay/order/callback</success_url>
+                <callback_url>latitudepay/order/callback</callback_url>
+                <fail_url>latitudepay/order/callback</fail_url>
+                <model>LatitudeNew\Payment\Model\Latitudepay</model>
+                <api_url_production>https://api.latitudepay.com/v3</api_url_production>
+                <api_url_sandbox>https://api.uat.latitudepay.com/v3</api_url_sandbox>
+                <content_type>application/com.latitudepay.ecom-v3.1+json</content_type>
+                <show_on_pdp>1</show_on_pdp>
+                <show_on_cart>1</show_on_cart>
+                <sort_order>3</sort_order>
+                <environment>production</environment>
+                <instructions>LatitudePay Checkout</instructions>
+            </latitudepay>
+            <genoapay>
+                <active>1</active>
+                <order_status>pending_approval</order_status>
+                <title>Genoapay</title>
+                <can_use_checkout>1</can_use_checkout>
+                <payment_action>true</payment_action>
+                <line_items_enabled>1</line_items_enabled>
+                <group>offline</group>
+                <currency>NZD</currency>
+                <allowspecific>0</allowspecific>
+                <specificcountry>AU,NZ</specificcountry>
+                <installment_no>10</installment_no>
+                <image_api_url>https://images.latitudepayapps.com/v2</image_api_url>
+                <can_capture>1</can_capture>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <success_url>latitudepay/order/callback</success_url>
+                <callback_url>latitudepay/order/callback</callback_url>
+                <fail_url>latitudepay/order/callback</fail_url>
+                <model>LatitudeNew\Payment\Model\Genoapay</model>
+                <api_url_production>https://api.genoapay.com/v3</api_url_production>
+                <api_url_sandbox>https://api.uat.genoapay.com/v3</api_url_sandbox>
+                <content_type>application/com.genoapay.ecom-v3.1+json</content_type>
+                <show_on_pdp>1</show_on_pdp>
+                <show_on_cart>1</show_on_cart>
+                <sort_order>3</sort_order>                
+                <environment>production</environment>
+                <instructions>Genoapay Checkout</instructions>
+            </genoapay>
+        </payment>
+    </default>
+</config>

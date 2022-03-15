@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment" >
+            <group id="latitude_section" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>LatitudePay/Genoapay (New)</label>
+                
+               <group id="latitudepay" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>
+                        <![CDATA[<div class="lattitude-payment-logo"></div><div class="lattitude-payment-byline">Use LatitudePay to spread the cost of your purchases over 10 weeks.</div>]]></label>
+                    <fieldset_css>complex lattitude-payment-section</fieldset_css>
+                    <frontend_model>LatitudeNew\Payment\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
+
+                    <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                        <label>Enabled</label>
+                        <config_path>payment/latitudepay/active</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="payment_services" translate="label" type="select" showInDefault="1" showInWebsite="1" sortOrder="2" showInStore="1">
+                        <label>Which Payment Options do you want to offer?</label>
+                        <config_path>payment/latitudepay/payment_services</config_path>
+                        <source_model>LatitudeNew\Payment\Model\Config\Source\Service</source_model>
+                        <comment><![CDATA[LatitudePay (Enable this option if you want to offer just LatitudePay)<br/>LatitudePay+ (Enable this option if you want to offer just LatitudePay+)<br/>Co-Presentment (Enable this option if you want to offer both LatitudePay & LatitudePay+)]]></comment>
+                    </field>
+
+                    <field id="payment_terms" translate="label" type="checkbox" showInDefault="1" showInWebsite="1" sortOrder="3" showInStore="1">
+                        <label>Payment Terms</label>
+                        <config_path>payment/latitudepay/payment_terms</config_path>
+                        <depends>
+                            <field id="payment_services" separator="|">LPAYPLUS|LPAY,LPAYPLUS</field>
+                        </depends>
+                        <frontend_model>LatitudeNew\Payment\Block\System\Config\Checkbox</frontend_model>
+                        <source_model>LatitudeNew\Payment\Model\Config\Source\Term</source_model>
+                        <backend_model>LatitudeNew\Payment\Model\Config\Backend\Term</backend_model>
+                        <validate>validate-payment-terms</validate>
+                        <frontend_class>validate-payment-terms</frontend_class>
+                        <comment><![CDATA[Please select the following payment terms you would like to offer your customers.<br/>The following payment terms will be reflected on your Modal.<br/>Please check your merchant contract to confirm the payment terms you have been approved for.]]></comment>
+                    </field>
+
+                    <field id="environment" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Environment</label>
+                        <config_path>payment/latitudepay/environment</config_path>
+                        <source_model>LatitudeNew\Payment\Model\Adminhtml\Source\Environment</source_model>
+                    </field>
+
+                     <field id="client_key" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Client Key</label>
+                        <config_path>payment/latitudepay/client_key</config_path>
+                    </field>
+
+                    <field id="client_secret" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Client Secret</label>
+                        <config_path>payment/latitudepay/client_secret</config_path>
+                    </field>
+
+                    <field id="show_on_pdp" translate="label" type="select" showInDefault="1" showInWebsite="1" sortOrder="7" showInStore="1" canRestore="1">
+                        <label>Show Snippet on Product Page</label>
+                        <config_path>payment/latitudepay/show_on_pdp</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="show_on_cart" translate="label" type="select" showInDefault="1" showInWebsite="1" sortOrder="8" showInStore="1" canRestore="1">
+                        <label>Show Snippet on Cart Page</label>
+                        <config_path>payment/latitudepay/show_on_cart</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="sort_order" translate="label" type="text" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/latitudepay/sort_order</config_path>
+                        <frontend_class>validate-number</frontend_class>
+                    </field>
+
+                     <!-- <field id="success_url" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Success URL</label>
+                        <config_path>payment/latitudepay/success_url</config_path>
+                        <frontend_model>LatitudeNew\Payment\Block\System\Config\Form\Field\Disable</frontend_model>
+                    </field>
+                    <field id="fail_url" translate="label" type="text" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Fail URL</label>
+                        <config_path>payment/latitudepay/fail_url</config_path>
+                        <frontend_model>LatitudeNew\Payment\Block\System\Config\Form\Field\Disable</frontend_model>
+                    </field>
+                    <field id="callback_url" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Callback URL</label>
+                        <config_path>payment/latitudepay/callback_url</config_path>
+                        <frontend_model>LatitudeNew\Payment\Block\System\Config\Form\Field\Disable</frontend_model>
+                    </field> -->
+
+                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                        <label>Payment from Applicable Countries</label>
+                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                        <config_path>payment/latitudepay/allowspecific</config_path>
+                    </field>
+                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                        <label>Payment from Specific Countries</label>
+                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                        <config_path>payment/latitudepay/specificcountry</config_path>
+                    </field>
+
+                    <!-- <field id="installment_no" translate="label" type="text" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>No. of Installments</label>
+                        <config_path>payment/latitudepay/installment_no</config_path>
+                        <frontend_model>LatitudeNew\Payment\Block\System\Config\Form\Field\Disable</frontend_model>
+                    </field>
+                    <field id="image_api_url" translate="label" type="text" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Image API URL</label>
+                        <config_path>payment/latitudepay/image_api_url</config_path>
+                        <frontend_model>LatitudeNew\Payment\Block\System\Config\Form\Field\Disable</frontend_model>
+                    </field> -->
+
+                    <field id="logging" translate="label" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Logging</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Toggle logging to latitude.log</comment>
+                        <config_path>payment/latitudepay/logging</config_path>
+                    </field>
+
+                </group>
+
+                 <group id="genoapay" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>
+                        <![CDATA[<div class="genoapay-payment-logo"></div><div class="genoapay-payment-byline">Pay with Genoapay at partnered stores over 10 weekly payments with no interest.</div>]]></label>
+                    <fieldset_css>complex genoapay-payment-section</fieldset_css>
+                    <frontend_model>LatitudeNew\Payment\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
+
+                    <field id="active" translate="label" type="select" showInDefault="1" showInWebsite="1" sortOrder="1" showInStore="1" canRestore="1">
+                        <label>Enabled</label>
+                        <config_path>payment/genoapay/active</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    
+                    <field id="environment" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Environment</label>
+                        <source_model>LatitudeNew\Payment\Model\Adminhtml\Source\Environment</source_model>
+                        <config_path>payment/genoapay/environment</config_path>
+                    </field>
+
+                    <field id="client_key" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Client Key</label>
+                        <config_path>payment/genoapay/client_key</config_path>
+                    </field>
+                    <field id="client_secret" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Client Secret</label>
+                        <!-- <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model> -->
+                        <config_path>payment/genoapay/client_secret</config_path>
+                    </field>
+
+                    <field id="show_on_pdp" translate="label" type="select" showInDefault="1" showInWebsite="1" sortOrder="5" showInStore="1" canRestore="1">
+                        <label>Show Snippet on Product Page</label>
+                        <config_path>payment/genoapay/show_on_pdp</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="show_on_cart" translate="label" type="select" showInDefault="1" showInWebsite="1" sortOrder="6" showInStore="1" canRestore="1">
+                        <label>Show Snippet on Cart Page</label>
+                        <config_path>payment/genoapay/show_on_cart</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="sort_order" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <label>Sort Order</label>
+                        <config_path>payment/genoapay/sort_order</config_path>
+                        <frontend_class>validate-number</frontend_class>
+                    </field>
+
+                    <!-- <field id="success_url" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Success URL</label>
+                        <config_path>payment/genoapay/success_url</config_path>
+                        <frontend_model>LatitudeNew\Payment\Block\System\Config\Form\Field\Disable</frontend_model>
+                    </field>
+                    <field id="fail_url" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Fail URL</label>
+                        <config_path>payment/genoapay/fail_url</config_path>
+                        <frontend_model>LatitudeNew\Payment\Block\System\Config\Form\Field\Disable</frontend_model>
+                    </field>
+                    <field id="callback_url" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Callback URL</label>
+                        <config_path>payment/genoapay/callback_url</config_path>
+                        <frontend_model>LatitudeNew\Payment\Block\System\Config\Form\Field\Disable</frontend_model>
+                    </field> -->
+
+                    <field id="allowspecific" translate="label" type="allowspecific" sortOrder="9" showInDefault="9" showInWebsite="1" showInStore="0" canRestore="1">
+                        <label>Payment From Applicable Countries</label>
+                        <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                        <config_path>payment/genoapay/allowspecific</config_path>
+                    </field>
+                    <field id="specificcountry" translate="label" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                        <label>Payment From Specific Countries</label>
+                        <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                        <config_path>payment/genoapay/specificcountry</config_path>
+                    </field>
+
+                    <!-- <field id="installment_no" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>No. of Installments</label>
+                        <config_path>payment/genoapay/installment_no</config_path>
+                        <frontend_model>LatitudeNew\Payment\Block\System\Config\Form\Field\Disable</frontend_model>
+                    </field>
+                    <field id="image_api_url" translate="label" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Image API URL</label>
+                        <config_path>payment/genoapay/image_api_url</config_path>
+                        <frontend_model>LatitudeNew\Payment\Block\System\Config\Form\Field\Disable</frontend_model>
+                    </field> -->
+
+                    <field id="logging" translate="label" type="select" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Logging</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <comment>Toggle logging to latitude.log</comment>
+                        <config_path>payment/genoapay/logging</config_path>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 	xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+	<policies>
+    	<policy id="font-src">
+        			<values>
+            			<value id="latitudepayapps" type="host">images.latitudepayapps.com</value>
+						<value id="latitudepayapps_staging" type="host">imageapi.magebinary.co.nz</value>
+        			</values>
+    	</policy>
+    	<policy id="style-src">
+        		<values>
+            		<value id="latitudepayapps_stype" type="host">images.latitudepayapps.com/</value>
+					<value id="latitudepayapps_stype_staging" type="host">imageapi.magebinary.co.nz/</value>
+        		</values>
+    	</policy>
+    	<policy id="default-src">
+        		<values>
+          		  	<value id="latitudepayapps_fallback" type="host">*.images.latitudepayapps.com</value>
+					<value id="latitudepayapps_fallback_staging" type="host">*.imageapi.magebinary.co.nz</value>
+        		</values>
+    	</policy>
+    	<policy id="form-action">
+        		<values>
+            		<value id="latitudepayapps_form" type="host">*.images.latitudepayapps.com</value>
+					<value id="latitudepayapps_form_staging" type="host">*.imageapi.magebinary.co.nz</value>
+        		</values>
+    	</policy>
+	</policies>
+</csp_whitelist>

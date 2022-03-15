@@ -1,0 +1,23 @@
+#method-latitudepay label::after {
+	content:url('https://images.latitudepayapps.com/images/lpay/logo.svg');
+	width: 75px;
+    position: relative;
+    display: inline-block;
+    top: 0px;
+    left: 10px;
+    vertical-align: middle;
+}
+
+#method-genoapay label::after {
+	content:url('https://images.latitudepayapps.com/images/gpay/logo.svg');
+	width: 75px;
+    position: relative;
+    display: inline-block;
+    top: 0px;
+    left: 10px;
+    vertical-align: middle;
+}
+
+.hide {
+    display: none !important;
+}

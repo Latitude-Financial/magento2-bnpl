@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @package   LatitudeNew_Payment
+ * @author    Lpay Team <integrationsupport@latitudefinancial.com>
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_payment_save_before">
+        <observer name="payment_before_save" instance="\LatitudeNew\Payment\Observer\BeforeOrderPaymentSaveObserver" />
+    </event>
+</config>

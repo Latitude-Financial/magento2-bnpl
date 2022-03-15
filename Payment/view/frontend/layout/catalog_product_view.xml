@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="LatitudeNew_Payment::css/latitude.css"/>
+    </head>
+    <body>
+      <referenceContainer name="content">
+            <referenceContainer name="product.info.main">
+                <block class="LatitudeNew\Payment\Block\Catalog\Product\View\PaymentOptions" name="product.info.paymentoptions" after="product.info.price"
+                       template="LatitudeNew_Payment::catalog/product/view/paymentoptions.phtml">
+                </block>
+            </referenceContainer>
+        </referenceContainer>
+    </body>
+</page>
