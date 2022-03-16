@@ -10,10 +10,10 @@
         <css src="LatitudeNew_Payment::css/latitude.css"/>
       </head>
       <body>
-		<referenceContainer name="content">
+		<!-- <referenceContainer name="content">
                   <block class="Magento\Framework\View\Element\Template" name="minicart.script.cus" before="-" 
                         template="LatitudeNew_Payment::minicart-script.phtml" />
-		</referenceContainer>
+		</referenceContainer> -->
             <referenceContainer name="checkout.cart.methods">
                   <block class="LatitudeNew\Payment\Block\Checkout\Cart\PaymentOptions" name="product.info.paymentoptions" 
                         before="checkout.cart.methods.multishipping" template="LatitudeNew_Payment::checkout/cart/paymentoptions.phtml">

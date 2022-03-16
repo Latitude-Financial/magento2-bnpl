@@ -10,6 +10,7 @@ define(
         'Magento_Checkout/js/view/payment/default',
         'Magento_Checkout/js/model/quote',
         'Magento_Checkout/js/model/totals',
+        //'Magento_Ui/js/model/messageList'
     ],
     function ($,Component, quote, totals) {
         'use strict';

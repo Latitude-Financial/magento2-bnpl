@@ -162,6 +162,7 @@ class Callback extends \Magento\Framework\App\Action\Action
             //setup redirect to cart
             $this->messageManager->addErrorMessage($param['message']);
             $this->_redirect('checkout/cart');
+            //$this->_redirect('checkout?cancel', ['_fragment' => 'payment']);
         }
     }
     
