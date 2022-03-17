@@ -11,11 +11,6 @@ namespace LatitudeNew\Payment\Helper;
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
     /**
-     * @var $logfile
-     */
-    public $logfile = '/var/log/latitude.log';
-
-    /**
      * @var \Magento\Config\Model\ResourceModel\Config
      */
     protected $scopeConfig;
@@ -41,9 +36,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     private $curlFactory;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var \LatitudeNew\Payment\Logger\Logger
      */
-    private $logger;
+    protected $logger;
 
     /**
      * Payment method code
@@ -71,7 +66,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Magento\Sales\Model\OrderFactory $orderFactoryCreate
      * @param \Magento\Framework\HTTP\Adapter\CurlFactory $curlFactory
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param \LatitudeNew\Payment\Logger\Logger  $logger
      * @param \Magento\Framework\App\Helper\Context $context
      */
     public function __construct(
@@ -79,7 +74,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Sales\Model\OrderFactory $orderFactoryCreate,
         \Magento\Framework\HTTP\Client\CurlFactory $curlFactory,
-        \Psr\Log\LoggerInterface $logger,
+        //\Psr\Log\LoggerInterface $logger,
+        \LatitudeNew\Payment\Logger\Logger $logger,
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     ) {
@@ -171,10 +167,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function log($message)
     {
         if ($this->isLogRequired()) {
-            $writer = new \Zend\Log\Writer\Stream(BP . $this->logfile);
-            $logger = new \Zend\Log\Logger();
-            $logger->addWriter($writer);
-            $logger->info($message);
+            $this->logger->info($message);
         }
         return false;
     }
@@ -273,7 +266,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     public function makecurlCall($url, $options, $headers, $credentials, $body, $isPost = true)
     {
-        $this->log('***Request***');
+        $this->log('*** Making CURL Request ***');
         echo $url, var_export($headers),var_export($credentials);
 
         $this->curl = $this->curlFactory->create();
@@ -296,7 +289,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
                 if ($this->getConfigData('logging')) {
                     $this->log($url . ' response: ' . json_encode($responseJsonDecoded));
                 }
-
+                
                 return $responseJsonDecoded;
             }
             else {

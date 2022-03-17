@@ -95,6 +95,7 @@ class Api extends \Magento\Framework\Model\AbstractModel
 
             if (property_exists($response, 'error')){
                 $this->messageManager->addErrorMessage(__(sprintf("Error getting token : %s", $response->error)));
+                $this->helper->log("Auth error: $response->error");
                 return null;
             }
             else
@@ -106,31 +107,53 @@ class Api extends \Magento\Framework\Model\AbstractModel
         }
     }
 
-    function stripJSON($obj){
-        $str = '';
+    // function stripJSON($obj){
+    //     $str = '';
         
-        foreach ($obj as $key => $value) {
-            if (is_array($value) || is_object($value)) {
-                $str .= (is_array($obj) ? '' : $key) . $this->stripJSON($value);
-            } 
-            else{
-                $str .= (is_array($obj) ? '' : $key) . preg_replace("/\s+/", '', !is_numeric($value) && !is_string($value) ? var_export($value,true) : $value);
-            }
-        }    
-        return $str;
+    //     foreach ($obj as $key => $value) {
+    //         if (is_array($value) || is_object($value)) {
+    //             $str .= (is_array($obj) ? '' : $key) . $this->stripJSON($value);
+    //         } 
+    //         else{
+    //             $str .= (is_array($obj) ? '' : $key) . preg_replace("/\s+/", '', !is_numeric($value) && !is_string($value) ? var_export($value,true) : $value);
+    //         }
+    //     }    
+    //     return $str;
+    // }
+
+    function stripJSON($requestBody)
+    {
+        $pattern = '/{"|":{"|","|":"|"},"|}],"|":|\[{"|"}}],"|}}|"}]"|},|,"|"}}|"}/';
+        $replacement = '';
+
+        $removeJsonFormatting = preg_replace($pattern, $replacement, $requestBody);
+        $removeAllSpace = str_replace(' ', '', $removeJsonFormatting);
+        $JSONStringWithoutFormatting = $removeAllSpace;
+
+        return $JSONStringWithoutFormatting;
     }
     
-    function getJSONsignature($jsn, $apiSecret){    
-        $progress = $this->stripJSON(json_decode($jsn));
-        $progress = base64_encode($progress);
-        return hash_hmac('sha256', $progress, $apiSecret);
+    // function getJSONsignature($jsn, $apiSecret){    
+    //     $progress = $this->stripJSON(json_decode($jsn,true));
+    //     $this->helper->log("Stripped: $progress");
+    //     $progress = base64_encode($progress);
+    //     $this->helper->log("base64: $progress");
+    //     return hash_hmac('sha256', $progress, $apiSecret);
+    // }
+
+    function getJSONsignature($jsn, $apiSecret)
+    {
+        $progress = trim($this->stripJSON($jsn));
+        $progress = base64_encode(str_replace(' ', '', $progress));
+        return hash_hmac('sha256', str_replace(' ', '',trim($progress)), $apiSecret);
     }
-    
+
     /**
      * Get purchase redirect url
      */
     function createOnlinePurchase($authToken, $lastOrder)
     {
+        $this->helper->log('****** REQUESTING PURCHASE URL ******');
         try{
             $baseUrl =  $this->storeManager->getStore()->getBaseUrl();
             $env = $this->helper->getConfigData('environment');
@@ -223,7 +246,11 @@ class Api extends \Magento\Framework\Model\AbstractModel
             ];
 
             $bodyStr = json_encode($body,JSON_UNESCAPED_SLASHES);
+            $this->helper->log("Body String: $bodyStr");
+
             $signature = $this->getJSONsignature($bodyStr, $clientSecret);
+            $this->helper->log("Signature: $signature");
+
             $url = "$gatewayUrl/sale/online?signature=$signature";
 
             $options = array(
@@ -263,6 +290,7 @@ class Api extends \Magento\Framework\Model\AbstractModel
     }
 
     function refund($order, $transactionId, $amount, $reason){
+        $this->helper->log('****** INITIATING REFUND ******');
         //get specific payment method to refund
         $storeId = $order->getStore()->getId();
         $methodCode = $order->getPayment()->getMethod();
@@ -286,9 +314,11 @@ class Api extends \Magento\Framework\Model\AbstractModel
 
        
         $bodyStr = json_encode($body,JSON_UNESCAPED_SLASHES);
+        $this->helper->log("Body String: $bodyStr");
 
         $signature = $this->getJSONsignature($bodyStr, $clientSecret);
-        
+        $this->helper->log("Signature: $signature");
+
         $url = "$gatewayUrl/sale/$transactionId/refund?signature=$signature";
 
         $options = array(
@@ -306,7 +336,6 @@ class Api extends \Magento\Framework\Model\AbstractModel
             'X-Idempotency-Key' => uniqid('', true),
             'Authorization' => 'Bearer '.$authToken,
         ];
-
         
         $response = $this->helper->makecurlCall($url, $options, $headers, false, $bodyStr);
 

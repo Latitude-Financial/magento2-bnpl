@@ -93,6 +93,7 @@ class Callback extends \Magento\Framework\App\Action\Action
      * @return void
      */
     protected function saveTransaction($order, $param) {
+        $this->helper->log('****** SAVING TRANSACTION ******');
         //change state from new to processing
         $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
        
@@ -123,6 +124,7 @@ class Callback extends \Magento\Framework\App\Action\Action
     }
 
     protected function onFail($param, $order){
+        $this->helper->log('****** FAILED URL ******');
         $quote = $this->quoteFactory->create()->loadByIdWithoutStore($order->getQuoteId());
         if ($quote->getId()) {
             //reactivate quote but remove reservedID, it will be assigned again on 'Place Order' click
@@ -167,6 +169,7 @@ class Callback extends \Magento\Framework\App\Action\Action
     }
     
     public function execute() {
+        $this->helper->log('****** CALLBACK METHOD TRIGGERED ******');
         //get client secret from config
         $clientSecret = $this->helper->getConfigData('client_secret');
         
@@ -186,6 +189,7 @@ class Callback extends \Magento\Framework\App\Action\Action
             'result' => $this->getRequest()->getParam('result'),
             'signature' => $this->getRequest()->getParam('signature')
         ];
+        $this->helper->log('PARAMETERS - ' . json_encode($param));
 
         //validate query param, if mismatch, send back to cart with warning message
         if(!$this->validator->verifyResponse($param, $clientSecret))
@@ -200,6 +204,7 @@ class Callback extends \Magento\Framework\App\Action\Action
 
         if ($order) {
             if ($param['result'] == 'COMPLETED') {
+                $this->helper->log('****** SUCCESS URL ******');
                 //only process success scenario when status is still pending approval (default of "Place Order" click)
                 if ($order->getStatus() === 'pending_approval') {
                     $this->saveTransaction($order, $param);
@@ -239,6 +244,7 @@ class Callback extends \Magento\Framework\App\Action\Action
                     }
                 } 
                 else {
+                    $this->helper->log('****** Invalid order update request ******');
                     $this->messageManager->addWarningMessage('Invalid order update request');
                     $this->_redirect('checkout/onepage/failure');
                 }
@@ -248,6 +254,7 @@ class Callback extends \Magento\Framework\App\Action\Action
             }
         } 
         else {
+            $this->helper->log('****** Order not found ******');
             $this->messageManager->addWarningMessage('Order not found');
             $this->_redirect('checkout/onepage/failure');
         }
