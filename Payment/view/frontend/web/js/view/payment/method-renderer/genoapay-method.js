@@ -10,9 +10,9 @@ define(
         'Magento_Checkout/js/view/payment/default',
         'Magento_Checkout/js/model/quote',
         'Magento_Checkout/js/model/totals',
-        //'Magento_Ui/js/model/messageList'
+        'Magento_Ui/js/model/messageList'
     ],
-    function ($,Component, quote, totals) {
+    function ($,Component, quote, totals, messageList) {
         'use strict';
         return Component.extend({
             totals: quote.getTotals(),
@@ -21,12 +21,12 @@ define(
             },
             initialize: function () {
                 this._super();
-                // var _self = this;
-                // _self.PaymentFailed();
+                var _self = this;
+                _self.PaymentFailed();
                 return this;
             },
             initPopup: function() {
-                $.getScript('https://latitudepay-image-api-dev.dev.merchant-integration-bnpl-np.lfscnp.com/v2/util.js') //window.checkoutConfig.latitudepayments.utilJs
+                $.getScript(window.checkoutConfig.latitudepayments.utilJs) //'https://latitudepay-image-api-dev.dev.merchant-integration-bnpl-np.lfscnp.com/v2/util.js'
                 .done(function( script, textStatus ) {
                     console.log( textStatus );
                   })
@@ -82,31 +82,31 @@ define(
                 }
                 return installmentText;
             },
-            // PaymentFailed: function () {
-            //     var cancelUrl = document.URL.split('?')[1];
-            //     if(cancelUrl){
-            //         var CancelRedirect = cancelUrl.split("/")[0];
-            //     }
-            //     if(CancelRedirect){
-            //         var msg = $.mage.__('There was an error with your payment, please try again or select other payment method');
-            //         if(cookieStorage.getItem('mage-messages')){
-            //             var messages = JSON.parse(cookieStorage.getItem('mage-messages'));
-            //             if(messages && messages.length){
-            //                 messages.forEach(message => {
-            //                     if(message.type == 'error'){
-            //                         messageList.addErrorMessage({ message: message.text });
-            //                     }
-            //                 });
-            //                 cookieStorage.setItem('mage-messages','[]');
-            //             } else {
-            //                 messageList.addErrorMessage({ message: msg });
-            //             }
-            //         } else {
-            //             messageList.addErrorMessage({ message: msg });
-            //         }
+            PaymentFailed: function () {
+                var cancelUrl = document.URL.split('?')[1];
+                if(cancelUrl){
+                    var CancelRedirect = cancelUrl.split("/")[0];
+                }
+                if(CancelRedirect){
+                    var msg = $.mage.__('There was an error with your payment, please try again or select other payment method');
+                    if(cookieStorage.getItem('mage-messages')){
+                        var messages = JSON.parse(cookieStorage.getItem('mage-messages'));
+                        if(messages && messages.length){
+                            messages.forEach(message => {
+                                if(message.type == 'error'){
+                                    messageList.addErrorMessage({ message: message.text });
+                                }
+                            });
+                            cookieStorage.setItem('mage-messages','[]');
+                        } else {
+                            messageList.addErrorMessage({ message: msg });
+                        }
+                    } else {
+                        messageList.addErrorMessage({ message: msg });
+                    }
                     
-            //     }
-            // }
+                }
+            }
         });
     }
 );
