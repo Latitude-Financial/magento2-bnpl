@@ -3,6 +3,7 @@
 ## Description
 
 LatitudePay & Genoapay Payment Modules for Magento 2.
+
 Tested up to: Magento 2.4.3-p1.
 
 ## Changelog
