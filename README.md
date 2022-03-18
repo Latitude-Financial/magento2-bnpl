@@ -8,6 +8,11 @@ Tested up to: Magento 2.4.3-p1.
 
 ## Changelog
 
+### 2.0.2
+- 18 March 2022
+- Replace Zend Logger removed in Magento 2.4.3 with a custom logger
+- Improve logging information
+
 ### 2.0.1
 - 17 March 2022
 - Change callback redirect from cart page to checkout page
