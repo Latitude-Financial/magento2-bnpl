@@ -267,8 +267,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     public function makecurlCall($url, $options, $headers, $credentials, $body, $isPost = true)
     {
         $this->log('*** Making CURL Request ***');
-        echo $url, var_export($headers),var_export($credentials);
-
+        $this->log("Calling $url with POST: $isPost, credentials: ".implode(',',$credentials ? $credentials : array()).", and body: $body");
+        
         $this->curl = $this->curlFactory->create();
         try{
             $this->curl->setHeaders($headers);
@@ -283,18 +283,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
                 $this->curl->get($url);
                 
             $response = $this->curl->getBody();
-            if (!property_exists(json_decode($response), 'error')) {
 
-                $responseJsonDecoded = json_decode($response);
-                if ($this->getConfigData('logging')) {
-                    $this->log($url . ' response: ' . json_encode($responseJsonDecoded));
-                }
-                
-                return $responseJsonDecoded;
+            if ($this->getConfigData('logging')) {
+                $this->log('Response: ' . $response);
             }
-            else {
-                return json_decode($response);
-            }
+            
+            return json_decode($response);
+
         } catch (\Exception $e) {
             $message = $e->getMessage();
             $this->log($message);

@@ -273,18 +273,20 @@ class Api extends \Magento\Framework\Model\AbstractModel
             $response = $this->helper->makecurlCall($url, $options, $headers, false, $bodyStr);
 
             if (property_exists($response, 'error')){
+                $this->helper->log("Error creating purchase : $response->error");
                 $this->messageManager->addErrorMessage(__(sprintf("Error creating purchase : %s", $response->error)));
                 return $response->error;
             }
             else{
                 //workaround since setData() doesn't persist new key to the DB
                 $lastOrder->setCustomerNote($response->reference)->save();
+                $this->helper->log("Successful purchase creation with reference: $response->reference");
                 return $response->paymentUrl;
             }
         }
         catch (\Exception $e){
             $this->messageManager->addErrorMessage(__(sprintf("Error creating purchase : %s", $e->getMessage())));
-            $this->helper->log("Error creating purchase : $e with secret $clientSecret");
+            $this->helper->log("Error creating purchase : $e");
             return $e->getMessage();
         }
     }
@@ -340,13 +342,18 @@ class Api extends \Magento\Framework\Model\AbstractModel
         $response = $this->helper->makecurlCall($url, $options, $headers, false, $bodyStr);
 
         if (property_exists($response, 'error')){
+            $this->helper->log('Error issuing refund - '.$response->error.' Transaction Id: '.$transactionId);
             throw new \Magento\Framework\Exception\LocalizedException(
                 __('Error issuing refund - '.$response->error.' Transaction Id: '.$transactionId)
             );            
         }
     }
 
+    /**
+     * Unused at the moment, was supposed to be used by cancel order cron
+     */
     function checkStatus($order){
+        $this->helper->log('****** CHECKING ORDER STATUS ******');
         //get transaction id to check
         $transactionId = $order->getPayment()->getTransactionId();
 
@@ -356,6 +363,8 @@ class Api extends \Magento\Framework\Model\AbstractModel
 
         //request auth from that specific payment method
         $authToken = $this->requestAuthToken($storeId, $methodCode);
+
+        $this->helper->log("Checking Order: ".$order->getId()." with Trasaction #$transactionId, storeId: $storeId, and methodCode: $methodCode");
 
         //get config data for that specific payment method
         $env = $this->helper->getConfigData('environment',$storeId,$methodCode);
