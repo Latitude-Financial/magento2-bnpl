@@ -1,22 +1,21 @@
 {
-    "name": "latitudenew/payment",
-    "description": "LatitudeNew Payment Gateway",
+    "name": "latitude-financial/payment",
+    "description": "LatitudePay & Genoapay Payment Gateways",
     "require": {
         "php": "~7.3.0||~7.3.0",
         "magento/framework": "102.0.*",
-        "magento/magento-composer-installer": "*",
-        "magento/module-catalog": "103.0.*",
+        "magento/magento-composer-installer": "~0.3.0",
         "magento/module-backend": "101.0.*",
-        "magento/module-checkout": "100.3.*",
-        "magento/module-config": "101.1.*",
+        "magento/module-ui": "101.1.*",
         "magento/module-customer": "102.0.*",
         "magento/module-payment": "100.3.*",
+        "magento/module-checkout": "100.3.*",
+        "magento/module-catalog": "103.0.*",
         "magento/module-quote": "101.1.*",
         "magento/module-sales": "102.0.*",
-        "magento/module-ui": "101.1.*"
+        "magento/module-config": "101.1.*"
     },
     "type": "magento2-module",
-    "version": "2.0.2",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
