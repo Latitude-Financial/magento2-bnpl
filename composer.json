@@ -2,7 +2,7 @@
     "name": "latitude-bnpl/payment",
     "description": "LatitudePay & Genoapay Payment Gateways",
     "require": {
-        "php": "~7.3.0",
+        "php": "~7.3.0||~7.4.0",
         "magento/framework": "102.0.*",
         "magento/magento-composer-installer": "~0.3.0",
         "magento/module-backend": "101.0.*",
