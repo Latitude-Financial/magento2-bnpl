@@ -1,5 +1,5 @@
 {
-    "name": "latitude-financial/payment",
+    "name": "latitude-bnpl/payment",
     "description": "LatitudePay & Genoapay Payment Gateways",
     "require": {
         "php": "~7.3.0||~7.3.0",
