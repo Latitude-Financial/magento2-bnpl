@@ -13,6 +13,7 @@
         <label data-bind="attr: {'for': getCode()}" class="label">
             <span data-bind="text: getTitle()"></span>
         </label>
+        <img class="latitude-icon" data-bind="attr: {src: getLogoUrl(), alt: $t(getTitle())}" style="height:26px">
     </div>
 
     <div class="payment-method-content">

@@ -82,6 +82,9 @@ define(
                 }
                 return installmentText;
             },
+            getLogoUrl: function() {
+                return window.checkoutConfig.latitudepayments.latitudepay;
+            },
             PaymentFailed: function () {
                 var cancelUrl = document.URL.split('?')[1];
                 if(cancelUrl){

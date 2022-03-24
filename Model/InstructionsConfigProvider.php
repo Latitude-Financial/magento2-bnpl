@@ -135,8 +135,8 @@ class InstructionsConfigProvider implements ConfigProviderInterface
         /** @noinspection PhpUndefinedMethodInspection */
         $config = [
             'latitudepayments' => [
-                'latitudepay' => $this->getViewFileUrl('LatitudeNew_Payment::images/latitude-pay-logo.png'),
-                'genoapay' => $this->getViewFileUrl('LatitudeNew_Payment::images/genoapay_logo_header.svg'),
+                'latitudepay' => $this->getViewFileUrl('LatitudeNew_Payment::images/latitudepay-logo.svg'),
+                'genoapay' => $this->getViewFileUrl('LatitudeNew_Payment::images/genoapay-logo.svg'),
                 'installmentno' => $this->getInstallmentNo(),
                 'currency_symbol' => $this->currency->getCurrencySymbol(),
                 'utilJs' => $this->helper->getUtilJs(),
