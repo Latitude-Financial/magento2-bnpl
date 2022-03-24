@@ -8,6 +8,11 @@ Tested up to: Magento 2.4.3-p1.
 
 ## Changelog
 
+### 2.0.5
+- 24 March 2022
+- adjusted composer requirement to allow smoother installation using `composer require`
+- logo renderer adjusted to cater to sites using onepage checkout
+
 ### 2.0.4
 - 22 March 2022
 - Show module version on configuration page
