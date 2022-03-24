@@ -52,15 +52,15 @@ class Index extends \Magento\Framework\App\Action\Action
                     $this->session->clearStorage();     //set session quote to null
                     return $this->resultRedirectFactory->create()->setUrl($url);
                 } else {
-                    $this->messageManager->addError(__("Url invalid: ".$url));
+                    //$this->messageManager->addError(__("Url invalid: ".$url));
                     return $this->resultRedirectFactory->create()->setPath('checkout/onepage/failure');
                 }
             }
-            $this->messageManager->addError(__("Invalid Gateway Credentials"));
+            //$this->messageManager->addError(__("Invalid Gateway Credentials"));
             return $this->resultRedirectFactory->create()->setPath('checkout/onepage/failure');
         }
         catch (\Exception $e){
-            $this->messageManager->addError(__(sprintf("Error creating purchase : %s", $e->getMessage())));
+            //$this->messageManager->addError(__(sprintf("Error creating purchase : %s", $e->getMessage())));
             return $this->resultRedirectFactory->create()->setPath('checkout/onepage/failure');
         }
     }

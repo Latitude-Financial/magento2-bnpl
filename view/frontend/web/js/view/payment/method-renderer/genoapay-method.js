@@ -91,7 +91,7 @@ define(
                     var CancelRedirect = cancelUrl.split("/")[0];
                 }
                 if(CancelRedirect){
-                    var msg = $.mage.__('There was an error with your payment, please try again or select other payment method');
+                    //var msg = $.mage.__('There was an error with your payment, please try again or select other payment method');
                     if(cookieStorage.getItem('mage-messages')){
                         var messages = JSON.parse(cookieStorage.getItem('mage-messages'));
                         if(messages && messages.length){
@@ -102,10 +102,10 @@ define(
                             });
                             cookieStorage.setItem('mage-messages','[]');
                         } else {
-                            messageList.addErrorMessage({ message: msg });
+                            //messageList.addErrorMessage({ message: msg });
                         }
                     } else {
-                        messageList.addErrorMessage({ message: msg });
+                        //messageList.addErrorMessage({ message: msg });
                     }
                     
                 }

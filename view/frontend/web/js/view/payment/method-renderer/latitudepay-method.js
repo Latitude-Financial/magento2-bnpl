@@ -102,10 +102,10 @@ define(
                             });
                             cookieStorage.setItem('mage-messages','[]');
                         } else {
-                            messageList.addErrorMessage({ message: msg });
+                            //messageList.addErrorMessage({ message: msg });
                         }
                     } else {
-                        messageList.addErrorMessage({ message: msg });
+                        //messageList.addErrorMessage({ message: msg });
                     }
                     
                 }
