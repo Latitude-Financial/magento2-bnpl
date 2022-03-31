@@ -4,7 +4,9 @@
 
 LatitudePay & Genoapay Payment Modules for Magento 2.
 
-Tested up to: Magento 2.4.3-p1.
+Compatible with Magento 2.3.5 onwards.
+
+Tested up to: Magento 2.4.3.
 
 ## Table of contents
 
@@ -19,13 +21,17 @@ Tested up to: Magento 2.4.3-p1.
 
 ## Changelog
 
-### 2.0.5
-- 24 March 2022
-- adjusted composer requirement to allow smoother installation using `composer require`
-- logo renderer adjusted to cater to sites using onepage checkout
+### 2.0.6
+- 31 March 2022
+- Ensure backward compatibility with Magento 2.3.X
 
 <details>
 <summary>Older versions</summary>
+
+### 2.0.5
+- 24 March 2022
+- Adjusted composer requirement to allow smoother installation using `composer require`
+- Logo renderer adjusted to cater to sites using onepage checkout
 
 ### 2.0.4
 - 22 March 2022
