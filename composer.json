@@ -1,9 +1,7 @@
 {
     "name": "latitude-bnpl/payment",
     "description": "LatitudePay & Genoapay Payment Gateways",
-    "require": {
-        "php": ">=7.3.0"
-    },
+  
     "type": "magento2-module",
     "license": [
         "OSL-3.0",

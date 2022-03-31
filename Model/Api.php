@@ -165,18 +165,20 @@ class Api extends \Magento\Framework\Model\AbstractModel
             $billing = $lastOrder->getBillingAddress()->getData();
             $shipping = $lastOrder->getShippingAddress()->getData();
 
-            //Don't use Quote object!! quote->getAllVisibleItems(), item->getQty() returns No products were found 
-            $products = array_map(fn($item) => [
-                "name" => $item->getName(),
-                "price" => [
-                "amount" => sprintf('%.2F',$item->getPriceInclTax()),
-                "currency" => $lastOrder->getOrderCurrencyCode(),
-                ],
-                "sku" => $item->getSku(),
-                "quantity" => ((int)$item->getQtyOrdered()),
-                "taxIncluded" => true
-            ]
-            , $items);
+            //for PHP <7.4 compatibility, changed arrow function to function with use()
+            $products = array_map(function ($item) use ($lastOrder) {
+                //Don't use Quote object!! quote->getAllVisibleItems(), item->getQty() returns No products were found 
+                return [
+                    "name" => $item->getName(),
+                    "price" => [
+                    "amount" => sprintf('%.2F',$item->getPriceInclTax()),
+                    "currency" => $lastOrder->getOrderCurrencyCode(),
+                    ],
+                    "sku" => $item->getSku(),
+                    "quantity" => ((int)$item->getQtyOrdered()),
+                    "taxIncluded" => true
+                ];
+            }, $items);
             
             if ($lastOrder->getCustomerIsGuest()) {
                 $customer_firstname = $billing['firstname'];
