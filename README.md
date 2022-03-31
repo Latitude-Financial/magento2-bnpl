@@ -23,7 +23,7 @@ Tested up to: Magento 2.4.3.
 
 ### 2.0.6
 - 31 March 2022
-- Ensure backward compatibility with Magento 2.3.X
+- Ensure backward compatibility with PHP 7.4 and lower
 
 <details>
 <summary>Older versions</summary>
