@@ -70,7 +70,7 @@ class Cancelpending
         $orders = $this->orderCollectionFactory->create()
         ->addFieldToSelect('*')
         ->addFieldToFilter('state', 'new')
-        ->addFieldToFilter('status', 'pending_approval');
+        ->addFieldToFilter('status', 'pending_latitude_approval');
 
         $this->helper->log('*** CHECKING EXPIRED ORDERS ***');
         foreach ($orders as $order) {

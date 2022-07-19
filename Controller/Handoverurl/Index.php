@@ -49,7 +49,7 @@ class Index extends \Magento\Framework\App\Action\Action
                 $url = $this->latitudeApi->createOnlinePurchase($token, $this->session->getLastRealOrder());
 
                 if ($url !== null && substr($url, 0, 4) == 'http') {
-                    $this->session->clearStorage();     //set session quote to null
+                    // $this->session->clearStorage();     //set session quote to null
                     return $this->resultRedirectFactory->create()->setUrl($url);
                 } else {
                     //$this->messageManager->addError(__("Url invalid: ".$url));

@@ -6,7 +6,7 @@ LatitudePay & Genoapay Payment Modules for Magento 2.
 
 Compatible with Magento 2.3.5 onwards.
 
-Tested up to: Magento 2.4.3.
+Tested up to: Magento 2.4.4.
 
 ## Table of contents
 
@@ -21,12 +21,21 @@ Tested up to: Magento 2.4.3.
 
 ## Changelog
 
-### 2.0.6
-- 31 March 2022
-- Ensure backward compatibility with PHP 7.4 and lower
+### 2.0.7
+- 19 July 2022
+- Compatibility with Magento 2.4.4
+- Adjusted module to not clear session on checkout
+- Update status key to pending_latitude_approval to avoid clash with other modules
+- Address base url information source to window.BASE_URL
+- Updated payment group from offline to installment
+- Add log to install module
 
 <details>
 <summary>Older versions</summary>
+
+### 2.0.6
+- 31 March 2022
+- Ensure backward compatibility with PHP 7.4 and lower
 
 ### 2.0.5
 - 24 March 2022
