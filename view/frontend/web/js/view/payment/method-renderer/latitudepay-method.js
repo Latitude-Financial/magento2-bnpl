@@ -58,7 +58,7 @@ define(
                                     if (!location.origin) {
                                         location.origin = location.protocol + "//" + location.host;
                                     }
-                                    window.location.replace(window.authenticationPopup.baseUrl + 'latitudepay/handoverurl/index');
+                                    window.location.replace(window.BASE_URL + 'latitudepay/handoverurl/index');
                                     return false;
                                 }
                             }

@@ -15,15 +15,19 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
      */
     protected $_resourceConfig;
 
+    protected $helper;
+
     /**
      * Construct
      *
      * @param \Magento\Config\Model\ResourceModel\Config $resourceConfig
      */
     public function __construct(
-        \Magento\Config\Model\ResourceModel\Config $resourceConfig
+        \Magento\Config\Model\ResourceModel\Config $resourceConfig,
+        \LatitudeNew\Payment\Helper\Data $helper
     ) {
         $this->_resourceConfig = $resourceConfig;
+        $this->helper = $helper;
     }
 
     /**
@@ -36,12 +40,15 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
         \Magento\Framework\Setup\SchemaSetupInterface $setup,
         \Magento\Framework\Setup\ModuleContextInterface $context
     ) {
-
+        $this->helper->log('*** LATITUDEPAY INSTALLATION - Adding Custom Status ***');
         $installer = $setup;
 
         // Required tables
         $statusTable = $installer->getTable('sales_order_status');
         $statusStateTable = $installer->getTable('sales_order_status_state');
+
+        $this->helper->log($statusTable ? 'sales_order_status exists' : 'sales_order_status doesn\'t exists');
+        $this->helper->log($statusTable ? 'sales_order_status_state exists' : 'sales_order_status_state doesn\'t exists');
 
         $installer->startSetup();
 
@@ -53,7 +60,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
                 'label'
             ],
             [
-                ['status' => 'pending_approval', 'label' => 'Pending Latitude\'s Approval']
+                ['status' => 'pending_latitude_approval', 'label' => 'Pending Latitude Approval']
             ]
         );
          
@@ -67,7 +74,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
             ],
             [
                 [
-                    'status' => 'pending_approval',
+                    'status' => 'pending_latitude_approval',
                     'state' => 'new',
                     'is_default' => 0
                 ]

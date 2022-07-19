@@ -19,6 +19,14 @@ Tested up to: Magento 2.4.3-p1.
 
 ## Changelog
 
+### 2.0.7
+- 19 July 2022
+- adjusted module to not clear session on checkout
+- update status key to pending_latitude_approval to avoid clash with other modules
+- address base url information source to window.BASE_URL
+- updated payment group from offline to installment
+- add log to install module
+
 ### 2.0.5
 - 24 March 2022
 - adjusted composer requirement to allow smoother installation using `composer require`

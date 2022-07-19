@@ -206,7 +206,7 @@ class Callback extends \Magento\Framework\App\Action\Action
             if ($param['result'] == 'COMPLETED') {
                 $this->helper->log('****** SUCCESS URL ******');
                 //only process success scenario when status is still pending approval (default of "Place Order" click)
-                if ($order->getStatus() === 'pending_approval') {
+                if ($order->getStatus() === 'pending_latitude_approval') {
                     $this->saveTransaction($order, $param);
                     if ($order->canInvoice()) {
                         //create invoice
@@ -234,12 +234,12 @@ class Callback extends \Magento\Framework\App\Action\Action
                         //update session's quote and order info
                         $this->checkoutSession
                         ->setLastQuoteId($order->getQuoteId())
-                        ->setLastSuccessQuoteId($order->getQuoteId())
-                        ->clearHelperData();
+                        ->setLastSuccessQuoteId($order->getQuoteId());
 
                         $this->checkoutSession->setLastOrderId($order->getId())
                         ->setLastRealOrderId($order->getIncrementId())
                         ->setLastOrderStatus($order->getStatus());
+
                         $this->_redirect('checkout/onepage/success');
                     }
                 } 
