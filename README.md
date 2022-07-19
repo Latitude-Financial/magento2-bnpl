@@ -23,11 +23,12 @@ Tested up to: Magento 2.4.4.
 
 ### 2.0.7
 - 19 July 2022
-- adjusted module to not clear session on checkout
-- update status key to pending_latitude_approval to avoid clash with other modules
-- address base url information source to window.BASE_URL
-- updated payment group from offline to installment
-- add log to install module
+- Compatibility with Magento 2.4.4
+- Adjusted module to not clear session on checkout
+- Update status key to pending_latitude_approval to avoid clash with other modules
+- Address base url information source to window.BASE_URL
+- Updated payment group from offline to installment
+- Add log to install module
 
 <details>
 <summary>Older versions</summary>
