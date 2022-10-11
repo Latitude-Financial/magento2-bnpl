@@ -113,7 +113,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             $storeId  = $this->storeManager->getStore()->getId();
         }
 
-        //if specific payment (genoapay/latitudepay) is passed, override this->code set on constructor
+        //if specific payment (genoapay/latitudepay/latitude) is passed, override this->code set on constructor
         if ($methodCode) {
             $this->code = $methodCode;
         }
@@ -153,10 +153,24 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * get Genoapay Enabled
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function isLCEnabled($store = null)
+    {
+        return $this->scopeConfig->getValue('payment/latitude/active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
+    }
+
+    /**
      * @return bullean
      */
-    public function isLogRequired()
+    public function isLogRequired($methodCode = null)
     {
+        if ($methodCode === 'latitude')
+            return $this->getConfigData('debug_mode', null, $methodCode);
+
         return $this->getConfigData('logging');
     }
 
@@ -164,11 +178,15 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param $message
      * @return Mage_Log
      */
-    public function log($message)
+    public function log($message, $methodCode = null)
     {
-        if ($this->isLogRequired()) {
+        if ($methodCode === 'latitude' && $this->isLogRequired($methodCode)){
             $this->logger->info($message);
         }
+        else if ($this->isLogRequired()) {
+            $this->logger->info($message);
+        }
+        
         return false;
     }
 
@@ -200,6 +218,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
                 return $this->scopeConfig->getValue('payment/latitudepay/payment_services', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
             }
             return 'LPAY';
+        }
+
+        if ($this->isLCEnabled()){
+            
         }
         return '';
     }
@@ -264,10 +286,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         );
     }
 
-    public function makecurlCall($url, $options, $headers, $credentials, $body, $isPost = true)
+    public function makecurlCall($url, $options, $headers, $credentials, $body, $isPost = true, $methodCode = null)
     {
-        $this->log('*** Making CURL Request ***');
-        $this->log("Calling $url with POST: $isPost, credentials: ".implode(',',$credentials ? $credentials : array()).", and body: $body");
+        $this->log('*** Making CURL Request ***', $methodCode);
+        $this->log("Calling $url with POST: $isPost, headers: ".json_encode($headers).", credentials: ".implode(',',$credentials ? $credentials : array()).", and body: $body", $methodCode);
         
         $this->curl = $this->curlFactory->create();
         try{
@@ -283,16 +305,22 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
                 $this->curl->get($url);
                 
             $response = $this->curl->getBody();
+            $status = $this->curl->getStatus();
 
-            if ($this->getConfigData('logging')) {
-                $this->log('Response: ' . $response);
-            }
+            $this->log('Status: ' . $status . ', Response: ' . $response, $methodCode);
             
-            return json_decode($response);
+            $decodedResponse = json_decode($response);
+            if (!$decodedResponse) {
+                $decodedResponse = new \stdClass();
+                $decodedResponse->error = "No response returned from api";
+            }
+            $decodedResponse->status = $status;
+
+            return $decodedResponse;
 
         } catch (\Exception $e) {
             $message = $e->getMessage();
-            $this->log($message);
+            $this->log($message, $methodCode);
             $this->messageManager->addErrorMessage(__("Error making curl call to $url with error $message"));
             throw new \Exception($e);
         }

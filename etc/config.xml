@@ -69,6 +69,31 @@
                 <environment>production</environment>
                 <instructions>Genoapay Checkout</instructions>
             </genoapay>
+            <latitude>
+                <active>1</active>
+                <model>LatitudeNew\Payment\Model\Latitude</model>
+                <merchant_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <test_mode>1</test_mode>
+                <debug_mode>1</debug_mode>
+                <order_status>pending_latitude_approval</order_status>
+                <payment_action>sale</payment_action>
+                <title>Latitude Interest Free</title>
+                <allowspecific>1</allowspecific>
+                <specificcountry>AU,NZ</specificcountry>
+                <api_url_production>https://api.latitudefinancial.com/v1/applybuy-checkout-service</api_url_production>
+                <api_url_sandbox>https://api.test.latitudefinancial.com/v1/applybuy-checkout-service</api_url_sandbox>
+                <callback_url>latitudepay/lcorder/callback</callback_url>
+                <cancel_url>latitudepay/lcorder/callback</cancel_url>
+                <instructions>Latitude Checkout</instructions>
+                <allowspecificcurrency>1</allowspecificcurrency>
+                <currency>AUD,NZD</currency>
+                <can_authorize>1</can_authorize>
+                <can_capture>1</can_capture>
+                <can_void>1</can_void>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <advanced_config />
+            </latitude>
         </payment>
     </default>
 </config>

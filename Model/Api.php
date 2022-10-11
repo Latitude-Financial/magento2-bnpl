@@ -399,4 +399,376 @@ class Api extends \Magento\Framework\Model\AbstractModel
         else
             return false;
     }
+
+
+    function generateSignatureFromString($str, $apiSecret)
+    {
+        $base64 = base64_encode($str);
+        return hash_hmac('sha256', $base64, $apiSecret);
+    }
+
+    /**
+     * Get purchase redirect url
+     */
+    function createLCPurchase($lastOrder)
+    {
+        $this->helper->log('****** REQUESTING LC PURCHASE URL ******', 'latitude');
+        try{
+            //TODO: all getConfigData should have (path,null,'latitude') on the params
+            $baseUrl =  $this->storeManager->getStore()->getBaseUrl();
+            $isTest = (boolean)($this->helper->getConfigData('test_mode', null, 'latitude') === '1');
+            $gatewayUrl = $this->helper->getConfigData($isTest ? 'api_url_sandbox' : 'api_url_production', null, 'latitude');
+            $merchantId = $this->helper->getConfigData('merchant_id', null, 'latitude');
+            $merchantSk = $this->helper->getConfigData('merchant_secret', null, 'latitude');
+
+            $order = $lastOrder->getData();
+            $items = $lastOrder->getAllVisibleItems();
+            $billing = $lastOrder->getBillingAddress()->getData();
+            $shipping = $lastOrder->getShippingAddress()->getData();
+
+            //for cancel URL
+            $order_id = $order['increment_id'];
+            $signature = $this->generateSignatureFromString("merchantReference=$order_id", $merchantSk);
+            $cancel_query = "?merchantReference=$order_id&signature=$signature";
+
+            //for PHP <7.4 compatibility, changed arrow function to function with use()
+            $products = array_map(function ($item) use ($lastOrder) {
+                //Don't use Quote object!! quote->getAllVisibleItems(), item->getQty() returns No products were found 
+                return [
+                    "name" => $item->getName(),
+                    "sku" => $item->getSku(),
+                    "quantity" => ((int)$item->getQtyOrdered()),
+                    "unitPrice" => (float)sprintf('%.2F',$item->getPriceInclTax()),
+                    "amount" => (float)sprintf('%.2F',$item->getQtyOrdered() * $item->getPriceInclTax()),
+                    "requiresShipping" => (boolean)($item->getIsVirtual() === '0'),
+                    "isGiftCard" => false
+                ];
+            }, $items);
+            
+            if ($lastOrder->getCustomerIsGuest()) {
+                $customer_firstname = $billing['firstname'];
+                $customer_lastname = $billing['lastname'];
+            } else {
+                $customer_firstname =  $order['customer_firstname'];
+                $customer_lastname  =  $order['customer_lastname'];
+            }
+
+            $body =  [
+                "merchantId" => $merchantId,
+                "isTest" =>  $isTest,
+                "merchantReference" => $order['increment_id'],
+                "amount" => (float)sprintf('%.2F',$order['grand_total']),
+                "currency" => $lastOrder->getOrderCurrencyCode(),
+                "customer" => [
+                   "firstName" => $customer_firstname,
+                   "lastName" => $customer_lastname,
+                   "phone" => (string)$billing['telephone'],
+                   "email" => $order['customer_email'],
+                ],
+                "shippingAddress" => [
+                    "name" => (string)$shipping['firstname'] ? $shipping['firstname'] . ' ' . $shipping['lastname'] : $billing['firstname'] . ' ' . $billing['lastname'],
+                    "line1" => (string)$shipping['street'] ? $shipping['street'] : $billing['street'],
+                    "city" => (string)$shipping['city'] ? $shipping['city'] : $billing['city'],
+                    "postCode" =>  (string)$shipping['postcode'] ? $shipping['postcode'] : $billing['postcode'],
+                    "state" => (string)$shipping['region'] ? $shipping['region'] : ($billing['region'] ? $billing['region'] : ''),
+                    "countryCode" => (string)$shipping['country_id'] ? $shipping['country_id'] : $billing['country_id'],
+                    "phone" => (string)$shipping['telephone'] ? $shipping['telephone'] : $billing['telephone'],
+                ],
+                "billingAddress" => [
+                    "name" => (string)$billing['firstname'] . ' ' . $billing['lastname'],
+                    "line1" => (string)$billing['street'],
+                    "city" => (string)$billing['city'],
+                    "postCode" =>  (string)$billing['postcode'],
+                    "state" => (string)$billing['region'] ? $billing['region'] : '',
+                    "countryCode" => (string)$billing['country_id'],
+                    "phone" => (string)$billing['telephone'],
+                ],
+                "orderLines" => $products,
+                "merchantUrls" => [
+                    "cancel" => $baseUrl . $this->helper->getConfigData('cancel_url') . $cancel_query,
+                    "complete" => $baseUrl . $this->helper->getConfigData('callback_url'),
+                ],
+                "totalShippingAmount" => (float)sprintf('%.2F',$lastOrder->getShippingAmount()),
+                "totalDiscountAmount" => abs((float)sprintf('%.2F',$lastOrder->getDiscountAmount())),
+                "platformType" => 'magento2',
+                "pluginVersion" => $this->helper->getConfigData('version', null, 'latitudepay'),
+            ];
+
+            $bodyStr = json_encode($body,JSON_UNESCAPED_SLASHES);
+            $this->helper->log("Body String: $bodyStr", 'latitude');
+
+            $url = "$gatewayUrl/purchase";
+
+            $options = array(
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING       => "",
+                CURLOPT_MAXREDIRS      => 10,
+                CURLOPT_TIMEOUT        => 30,
+                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1
+            );
+
+            $headers = [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Basic ' . base64_encode("$merchantId:$merchantSk"),
+            ];
+
+            $response = $this->helper->makecurlCall($url, $options, $headers, false, $bodyStr, true, 'latitude');
+
+            if ($response->status !== 200){
+                $this->helper->log("Error creating purchase with status: $response->status", 'latitude');
+                $this->messageManager->addErrorMessage(__(sprintf("Error creating purchase with status: %s", $response->status)));
+                return $response->status;
+            }
+            else if ($response->error !== '' && $response->redirectUrl && $response->redirectUrl !== null){
+                $this->helper->log("Purchase creation redirect with error: $response->error", 'latitude');
+                return $response->redirectUrl;
+            }
+            else if ($response->error !== ""){
+                $this->helper->log("Error creating purchase : $response->error", 'latitude');
+                $this->messageManager->addErrorMessage(__(sprintf("Error creating purchase : %s", $response->error)));
+                return $response->error;
+            }
+            else{
+                //workaround since setData() doesn't persist new key to the DB
+                //$lastOrder->setCustomerNote($response->gatewayReference)->save();
+                $this->helper->log("Successful purchase creation with gateway reference: $response->gatewayReference", 'latitude');
+                return $response->redirectUrl;
+            }
+        }
+        catch (\Exception $e){
+            $this->messageManager->addErrorMessage(__(sprintf("Error creating purchase : %s", $e->getMessage())));
+            $this->helper->log("Error creating purchase : $e", 'latitude');
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     * Get purchase redirect url
+     */
+    function verifyLCPurchase($order_id, $transactionReference, $gatewayReference)
+    {
+        $this->helper->log('****** VERIFYING LC CALLBACK URL ******', 'latitude');
+
+        $isTest = (boolean)($this->helper->getConfigData('test_mode', null, 'latitude') === '1');
+        $gatewayUrl = $this->helper->getConfigData($isTest ? 'api_url_sandbox' : 'api_url_production', null, 'latitude');
+        $merchantId = $this->helper->getConfigData('merchant_id', null, 'latitude');
+        $merchantSk = $this->helper->getConfigData('merchant_secret', null, 'latitude');
+
+        $body = [
+            "merchantReference" => $order_id,
+            "transactionReference" =>  $transactionReference,
+            "gatewayReference" => $gatewayReference
+        ];
+        
+        $bodyStr = json_encode($body,JSON_UNESCAPED_SLASHES);
+        $this->helper->log("Body String: $bodyStr", 'latitude');
+
+        $url = "$gatewayUrl/purchase/verify";
+
+        $options = array(
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => "",
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1
+        );
+
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode("$merchantId:$merchantSk"),
+        ];
+
+        $response = $this->helper->makecurlCall($url, $options, $headers, false, $bodyStr, true, 'latitude');
+
+        return $response;
+    }
+
+    function refundLCOrder($order, $transactionId, $gatewayReference, $amount, $reason){
+        $this->helper->log('****** INITIATING LC REFUND ******', 'latitude');
+    
+        //get specific payment method to refund
+        $storeId = $order->getStore()->getId();
+        $isTest = (boolean)($this->helper->getConfigData('test_mode', null, 'latitude') === '1');
+        $gatewayUrl = $this->helper->getConfigData($isTest ? 'api_url_sandbox' : 'api_url_production', null, 'latitude');
+        $merchantId = $this->helper->getConfigData('merchant_id', null, 'latitude');
+        $merchantSk = $this->helper->getConfigData('merchant_secret', null, 'latitude');
+      
+        $body = [
+            'merchantId' => $merchantId,
+            'isTest' => $isTest,
+            'merchantReference' => $order->getIncrementId(),
+            'gatewayReference' => $gatewayReference,
+            'amount' => (float)sprintf('%.2F', $amount),
+            'currency' => $order->getOrderCurrencyCode(),
+            'type' => 'refund',
+            'description' => $reason,
+            'platformType' => 'magento2'
+        ];
+    
+        $bodyStr = json_encode($body,JSON_UNESCAPED_SLASHES);
+        $this->helper->log("Body String: $bodyStr", 'latitude');
+    
+        $url = "$gatewayUrl/refund";
+    
+        $options = array(
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => "",
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1
+        );
+    
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode("$merchantId:$merchantSk"),
+        ];
+        
+        $response = $this->helper->makecurlCall($url, $options, $headers, false, $bodyStr, true, 'latitude');
+    
+        if ($response->status !== 200){
+            $this->helper->log("Error issuing refund with status: $response->status, Transaction Ref: $transactionId, Gateway Ref: $gatewayReference", 'latitude');
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Error issuing refund - '.$response->status.' Transaction Ref: '.$transactionId.' Gateway Ref: '.$gatewayReference)
+            );  
+        }
+        if ($response->error !== ""){
+            $this->helper->log("Error issuing refund - $response->error, Transaction Ref: $transactionId, Gateway Ref: $gatewayReference", 'latitude');
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Error issuing refund - '.$response->error.' Transaction Ref: '.$transactionId.' Gateway Ref: '.$gatewayReference)
+            );  
+        }
+    
+        $order->addStatusHistoryComment(
+            __("Refunded $$amount - $reason, Gateway Ref: $gatewayReference, Transaction Ref: $transactionId")
+        )
+        ->setIsCustomerNotified(false)
+        ->save();
+    }
+    
+    function captureLCOrder($order, $transactionId, $gatewayReference, $amount, $reason){
+        $this->helper->log('****** INITIATING LC CAPTURE ******', 'latitude');
+    
+        //get specific payment method to refund
+        $storeId = $order->getStore()->getId();
+        $isTest = (boolean)($this->helper->getConfigData('test_mode', null, 'latitude') === '1');
+        $gatewayUrl = $this->helper->getConfigData($isTest ? 'api_url_sandbox' : 'api_url_production', null, 'latitude');
+        $merchantId = $this->helper->getConfigData('merchant_id', null, 'latitude');
+        $merchantSk = $this->helper->getConfigData('merchant_secret', null, 'latitude');
+      
+        $body = [
+            'merchantId' => $merchantId,
+            'isTest' => $isTest,
+            'merchantReference' => $order->getIncrementId(),
+            'gatewayReference' => $gatewayReference,
+            'amount' => (float)sprintf('%.2F', $amount),
+            'currency' => $order->getOrderCurrencyCode(),
+            'type' => 'capture',
+            'description' => $reason,
+            'platformType' => 'magento2'
+        ];
+    
+        $bodyStr = json_encode($body,JSON_UNESCAPED_SLASHES);
+        $this->helper->log("Body String: $bodyStr", 'latitude');
+    
+        $url = "$gatewayUrl/capture";
+    
+        $options = array(
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => "",
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1
+        );
+    
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode("$merchantId:$merchantSk"),
+        ];
+        
+        $response = $this->helper->makecurlCall($url, $options, $headers, false, $bodyStr, true, 'latitude');
+    
+        if ($response->status !== 200){
+            $this->helper->log("Error capturing payment with status: $response->status, Transaction Ref: $transactionId, Gateway Ref: $gatewayReference", 'latitude');
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Error capturing payment - '.$response->status.' Transaction Id: '.$transactionId.' Gateway Ref: '.$gatewayReference)
+            );  
+        }
+        if ($response->error !== ""){
+            $this->helper->log("Error capturing payment - $response->error, Transaction Ref: $transactionId, Gateway Ref: $gatewayReference", 'latitude');
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Error capturing payment - '.$response->error.' Transaction Id: '.$transactionId.' Gateway Ref: '.$gatewayReference)
+            );  
+        }
+    
+        $order->addStatusHistoryComment(
+            __("Captured $$amount - $reason Gateway Ref: $gatewayReference, Transaction Ref: $transactionId")
+        )
+        ->setIsCustomerNotified(true)
+        ->save();
+    }
+    
+    function voidLCOrder($order, $transactionId, $gatewayReference, $amount){
+        $this->helper->log('****** INITIATING LC VOID ******', 'latitude');
+    
+        //get specific payment method to refund
+        $storeId = $order->getStore()->getId();
+        $isTest = (boolean)($this->helper->getConfigData('test_mode', null, 'latitude') === '1');
+        $gatewayUrl = $this->helper->getConfigData($isTest ? 'api_url_sandbox' : 'api_url_production', null, 'latitude');
+        $merchantId = $this->helper->getConfigData('merchant_id', null, 'latitude');
+        $merchantSk = $this->helper->getConfigData('merchant_secret', null, 'latitude');
+      
+        $body = [
+            'merchantId' => $merchantId,
+            'isTest' => $isTest,
+            'merchantReference' => $order->getIncrementId(),
+            'gatewayReference' => $gatewayReference,
+            'amount' => (float)sprintf('%.2F', $amount),
+            'currency' => $order->getOrderCurrencyCode(),
+            'type' => 'void',
+            'description' => 'Customer change of mind',
+            'platformType' => 'magento2'
+        ];
+    
+        $bodyStr = json_encode($body,JSON_UNESCAPED_SLASHES);
+        $this->helper->log("Body String: $bodyStr", 'latitude');
+    
+        $url = "$gatewayUrl/void";
+    
+        $options = array(
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => "",
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1
+        );
+    
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode("$merchantId:$merchantSk"),
+        ];
+        
+        $response = $this->helper->makecurlCall($url, $options, $headers, false, $bodyStr, true, 'latitude');
+    
+        if ($response->status !== 200){
+            $this->helper->log("Error voiding payment with status: $response->status, Transaction Ref: $transactionId, Gateway Ref: $gatewayReference", 'latitude');
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Error voiding payment - '.$response->error.' Transaction Id: '.$transactionId.' Gateway Ref: '.$gatewayReference)
+            );  
+        }
+        if ($response->error !== ""){
+            $this->helper->log("Error voiding payment - $response->error, Transaction Ref: $transactionId, Gateway Ref: $gatewayReference", 'latitude');
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Error voiding payment - '.$response->error.' Transaction Id: '.$transactionId.' Gateway Ref: '.$gatewayReference)
+            );  
+        }
+    
+        $order->addStatusToHistory(
+            \Magento\Sales\Model\Order::STATE_CLOSED,             //status   
+            "Voided $$amount - Gateway Ref: $gatewayReference, Transaction Ref: $transactionId",     //comment, default ''
+            false                                                   //isCustomerNotified, default false
+        )
+        ->setIsCustomerNotified(true)
+        ->save();
+    }
 }
+

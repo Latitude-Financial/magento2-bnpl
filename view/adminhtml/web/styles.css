@@ -1,5 +1,8 @@
 #row_payment_au_latitude_section_latitude .section-config {border:0;}
-.complex.lattitude-payment-section .lattitude-payment-logo { display:inline-block; vertical-align: middle; margin: 0 20px 0 0px; width: 200px; height:60px; background-repeat: no-repeat, no-repeat, no-repeat; background-image: url('images/latitudepay.png'); }
-.complex.lattitude-payment-section .lattitude-payment-byline, .complex.genoapay-payment-section .genoapay-payment-byline { display: inline-block; vertical-align: top; width: 50%;font-weight: normal; }
-.complex.lattitude-payment-section .button-container ,.complex.genoapay-payment-section .button-container{ float:right; }
+.complex.latitude-payment-section .latitude-payment-logo { display:inline-block; vertical-align: middle; margin: 0 20px 0 0px; width: 200px; height:60px; background-repeat: no-repeat, no-repeat, no-repeat; background-image: url('images/latitudepay.png'); }
+.complex.latitude-payment-section .latitude-payment-byline, .complex.genoapay-payment-section .genoapay-payment-byline { display: inline-block; vertical-align: top; width: 50%;font-weight: normal; }
+.complex.latitude-payment-section .button-container ,.complex.genoapay-payment-section .button-container{ float:right; }
 .complex.genoapay-payment-section .genoapay-payment-logo  { display:inline-block; vertical-align: middle; margin: 0 20px 0 0px; width: 200px; height:60px; background-repeat: no-repeat, no-repeat, no-repeat; background-image: url('images/genoapay.png'); }
+.complex.latitude-payment-section .latitude-checkout-logo { display:inline-block; vertical-align: middle; margin: 0 20px 0 0px; width: 200px; height:60px; background-repeat: no-repeat, no-repeat, no-repeat; background-size: contain; background-image: url('https://resources.latitudefinancial.com/img/interest-free/logos/lfs-lock-up.svg');}
+.complex.latitude-payment-section .gem-logo { display:inline-block; vertical-align: middle; margin: 0 20px 0 5px; width: 200px; height:40px; background-repeat: no-repeat, no-repeat, no-repeat; background-size: contain; background-image: url('https://resources.latitudefinancial.com/img/interest-free/logos/GEM-IF-LOGO.svg');}
+.complex.latitude-payment-section .latitude-checkout-link { margin-left:30px; }

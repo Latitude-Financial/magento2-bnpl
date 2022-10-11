@@ -111,6 +111,8 @@ class Latitudepay extends \Magento\Payment\Model\Method\AbstractMethod
 
     protected $storeManager;
 
+    protected $_scopeConfig;
+
     /**
      * Construct
      *
@@ -157,6 +159,7 @@ class Latitudepay extends \Magento\Payment\Model\Method\AbstractMethod
         );
         $this->latitudeApi = $latitudeApi;
         $this->storeManager = $storeManager;
+        $this->_scopeConfig = $scopeConfig;
     }
 
     /**

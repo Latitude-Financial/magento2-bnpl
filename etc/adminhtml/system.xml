@@ -10,10 +10,14 @@
                     <frontend_model>LatitudeNew\Payment\Block\Adminhtml\System\Config\Form\Version</frontend_model>
                 </field>
 
-               <group id="latitudepay" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="latitudepay" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>
-                        <![CDATA[<div class="lattitude-payment-logo"></div><div class="lattitude-payment-byline">Use LatitudePay to spread the cost of your purchases over 10 weeks.</div>]]></label>
-                    <fieldset_css>complex lattitude-payment-section</fieldset_css>
+                        <![CDATA[
+                            <div class="latitude-payment-logo"></div>
+                            <div class="latitude-payment-byline">Use LatitudePay to spread the cost of your purchases over 10 weeks.</div>
+                        ]]>
+                    </label>
+                    <fieldset_css>complex latitude-payment-section</fieldset_css>
                     <frontend_model>LatitudeNew\Payment\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
 
                     <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
@@ -124,7 +128,7 @@
 
                 </group>
 
-                 <group id="genoapay" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="genoapay" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>
                         <![CDATA[<div class="genoapay-payment-logo"></div><div class="genoapay-payment-byline">Pay with Genoapay at partnered stores over 10 weekly payments with no interest.</div>]]></label>
                     <fieldset_css>complex genoapay-payment-section</fieldset_css>
@@ -214,6 +218,73 @@
                         <comment>Toggle logging to latitude.log</comment>
                         <config_path>payment/genoapay/logging</config_path>
                     </field>
+                </group>
+
+                <group id="latitude" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>
+                        <![CDATA[
+                            <div class="latitude-checkout-logo"></div>
+                            <div class="latitude-payment-byline">Latitude Checkout</div>
+                            <div class="latitude-checkout-link"><div class="gem-logo"></div><a href="https://checkout.latitudefinancial.com" target="_blank">Learn more</a></div>
+                        ]]>
+                    </label>
+                    <fieldset_css>complex latitude-payment-section</fieldset_css>
+                    <frontend_model>LatitudeNew\Payment\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
+
+                    <group id="latitude_payment" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payment</label>
+                        <attribute type="expanded">1</attribute>
+
+                        <field id="active" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Is Active ?</label>
+                            <config_path>payment/latitude/active</config_path>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <comment>
+                                <![CDATA[When disabled, payment option would not be available on checkout page.]]>
+                            </comment>
+                        </field>
+
+                        <field id="merchant_id" translate="label" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Merchant ID</label>
+                            <config_path>payment/latitude/merchant_id</config_path>
+                        </field>
+
+                        <field id="merchant_secret" translate="label" type="obscure" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Secret Key</label>
+                            <config_path>payment/latitude/merchant_secret</config_path>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        </field>
+
+                        <field id="store_merchant_id" translate="label" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Store Merchant ID</label>
+                            <config_path>payment/latitude/store_merchant_id</config_path>
+                        </field>
+                        
+                        <field id="test_mode" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Is Test Mode ?</label>
+                            <config_path>payment/latitude/test_mode</config_path>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <comment>When enabled, sends requests to our sandbox environment</comment>
+                        </field>
+
+                        <field id="debug_mode" translate="label" type="select" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Is Debug Mode ?</label>
+                            <config_path>payment/latitude/debug_mode</config_path>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <comment>When enabled, adds extra information in logs (latitude.log)</comment>
+                        </field>
+                    </group>
+
+                    <group id="latitude_advanced" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Advanced</label>
+
+                        <field id="latitude_advanced_config" translate="label" type="textarea" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Config</label>
+                            <config_path>payment/latitude/advanced_config</config_path>
+                            <backend_model>LatitudeNew\Payment\Model\Adminhtml\Validation\AdvancedConfig</backend_model>
+                            <comment>This field expects a valid JSON. Refer merchant integration guide or contact LFS representative for more details</comment>
+                        </field>
+                    </group>
                 </group>
             </group>
         </section>
