@@ -92,7 +92,8 @@
                 <can_void>1</can_void>
                 <can_use_checkout>1</can_use_checkout>
                 <is_gateway>1</is_gateway>
-                <advanced_config />
+                <show_on_pdp>1</show_on_pdp>
+                <show_on_cart>1</show_on_cart>
             </latitude>
         </payment>
     </default>

@@ -276,13 +276,37 @@
                     </group>
 
                     <group id="latitude_advanced" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Advanced</label>
+                        <label>Widget Settings</label>
 
-                        <field id="latitude_advanced_config" translate="label" type="textarea" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>Config</label>
-                            <config_path>payment/latitude/advanced_config</config_path>
-                            <backend_model>LatitudeNew\Payment\Model\Adminhtml\Validation\AdvancedConfig</backend_model>
-                            <comment>This field expects a valid JSON. Refer merchant integration guide or contact LFS representative for more details</comment>
+                        <field id="show_on_pdp" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Show Widget on Product Page</label>
+                            <config_path>payment/latitude/show_on_pdp</config_path>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        </field>
+                        <field id="show_on_cart" translate="label" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Show Widget on Cart Page</label>
+                            <config_path>payment/latitude/show_on_cart</config_path>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        </field>
+
+                        <field id="layout" translate="label" type="select" showInDefault="1" showInWebsite="1" sortOrder="2" showInStore="1">
+                            <label>Widget Layout</label>
+                            <config_path>payment/latitude/layout</config_path>
+                            <source_model>LatitudeNew\Payment\Model\Config\Source\Layout</source_model>
+                        </field>
+                        <field id="plan_type" translate="label" type="select" showInDefault="1" showInWebsite="1" sortOrder="2" showInStore="1">
+                            <label>Interest Free Plan Type</label>
+                            <config_path>payment/latitude/plan_type</config_path>
+                            <source_model>LatitudeNew\Payment\Model\Config\Source\PlanType</source_model>
+                        </field>
+                         <field id="plan_period" translate="label" type="select" showInDefault="1" showInWebsite="1" sortOrder="2" showInStore="1">
+                            <label>Payment Plan Period</label>
+                            <config_path>payment/latitude/plan_period</config_path>
+                            <source_model>LatitudeNew\Payment\Model\Config\Source\PlanPeriod</source_model>
+                        </field>
+                        <field id="minimum_amount" translate="label" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Widget Minimum Amount</label>
+                            <config_path>payment/latitude/minimum_amount</config_path>
                         </field>
                     </group>
                 </group>

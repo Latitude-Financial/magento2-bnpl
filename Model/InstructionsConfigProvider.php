@@ -143,6 +143,7 @@ class InstructionsConfigProvider implements ConfigProviderInterface
                 'utilJs' => $this->helper->getUtilJs(),
                 'lpay_installment_block' => '<img class="lpay_snippet" src="'.$this->getSnippetImage().'" alt="LatitudePay" >',
                 'gpay_installment_block'    => '<img class="lpay_snippet" src="'.$this->getSnippetImage().'" alt="GenoaPay" >',
+                'lc_installment_block' => '<img class="lpay_snippet" src="'.$this->getSnippetImage().'" alt="LatitudePay" >',
             ],
         ];
 
