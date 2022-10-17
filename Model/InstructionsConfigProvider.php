@@ -137,7 +137,7 @@ class InstructionsConfigProvider implements ConfigProviderInterface
             'latitudepayments' => [
                 'latitudepay' => $this->getViewFileUrl('LatitudeNew_Payment::images/latitudepay-logo.svg'),
                 'genoapay' => $this->getViewFileUrl('LatitudeNew_Payment::images/genoapay-logo.svg'),
-                'latitude' => 'https://resources.latitudefinancial.com/img/interest-free/logos/lfs-lock-up.svg',
+                'latitude' => 'https://resources.latitudefinancial.com/img/interest-free/logos/' . ($this->helper->getStoreCurrency() === 'AUD' ? 'lfs-lock-up.svg' : 'GEM-IF-LOGO.svg'),
                 'installmentno' => $this->getInstallmentNo(),
                 'currency_symbol' => $this->currency->getCurrencySymbol(),
                 'utilJs' => $this->helper->getUtilJs(),
