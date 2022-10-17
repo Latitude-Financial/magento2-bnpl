@@ -2,7 +2,7 @@
 
 ## Description
 
-LatitudePay & Genoapay Payment Modules for Magento 2.
+LatitudePay, Genoapay, Latitude Interest Free & GEM Payment Modules for Magento 2.
 
 Compatible with Magento 2.3.5 onwards.
 
@@ -21,6 +21,14 @@ Tested up to: Magento 2.4.4.
 
 ## Changelog
 
+### 3.0.0
+- 18 October 2022
+- Integration of Latitude Interest Free and GEM
+- Upgrade Schema Implementation
+
+<details>
+<summary>Older versions</summary>
+
 ### 2.0.7
 - 19 July 2022
 - Compatibility with Magento 2.4.4
@@ -29,9 +37,6 @@ Tested up to: Magento 2.4.4.
 - Address base url information source to window.BASE_URL
 - Updated payment group from offline to installment
 - Add log to install module
-
-<details>
-<summary>Older versions</summary>
 
 ### 2.0.6
 - 31 March 2022

@@ -40,7 +40,7 @@ class UpgradeSchema implements \Magento\Framework\Setup\UpgradeSchemaInterface
         \Magento\Framework\Setup\SchemaSetupInterface $setup,
         \Magento\Framework\Setup\ModuleContextInterface $context
     ) {
-        $this->helper->log('*** LATITUDEPAY UPGRADE - Adding Custom Status ***');
+        $this->helper->log('*** LATITUDEPAY UPGRADE - Adding Custom Status, current version: '.$context->getVersion().' ***');
         $installer = $setup;
 
         // Required tables
@@ -51,8 +51,8 @@ class UpgradeSchema implements \Magento\Framework\Setup\UpgradeSchemaInterface
         $this->helper->log($statusTable ? 'sales_order_status_state exists' : 'sales_order_status_state doesn\'t exists');
 
         $installer->startSetup();
-        if (version_compare($context->getVersion(), '2.0.7', '<')) {
-            $this->helper->log('*** LATITUDEPAY UPGRADE - version below 2.0.7, adding new status... ***');
+        if (version_compare($context->getVersion(), '3.0.0', '<')) {
+            $this->helper->log('*** LATITUDEPAY UPGRADE - version below 3.0.0, adding new status... ***');
 
             // Insert statuses
             $installer->getConnection()->insertArray(
