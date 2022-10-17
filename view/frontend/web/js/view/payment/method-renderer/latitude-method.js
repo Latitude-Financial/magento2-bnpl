@@ -25,15 +25,6 @@ define(
                 _self.PaymentFailed();
                 return this;
             },
-            initPopup: function() {
-                $.getScript(window.checkoutConfig.latitudepayments.utilJs) //'https://latitudepay-image-api-dev.dev.merchant-integration-bnpl-np.lfscnp.com/v2/util.js'
-                .done(function( script, textStatus ) {
-                    console.log( textStatus );
-                  })
-                  .fail(function( jqxhr, settings, exception ) {
-                    console.log(exception);
-                });
-            },
             placeOrder: function (data, event) {
                 var self = this;
 
@@ -69,22 +60,38 @@ define(
 
                 return false;
             },
-            /** Returns payment method instructions */
+            
             getInstallmentText: function() {
-                var grandTotal  = 0,
-                installmentText = '',
-                curInstallment  = window.checkoutConfig.latitudepayments.installmentno,
-                currency        = window.checkoutConfig.latitudepayments.currency_symbol,
-                grandTotal      = totals.getSegment('grand_total').value,
-                html            = window.checkoutConfig.latitudepayments.lpay_installment_block;
-                if(grandTotal){
-                    installmentText = html.replace('__AMOUNT__',grandTotal);
-                }
-                return installmentText;
+                window.LatitudeCheckout = window.checkoutConfig.latitudepayments.lc_options;
+
+                window.LatitudeCheckout.container = {
+                    main: "main-container",
+                    footer: "footer-container",
+                };
+
+                var totals = quote.getTotals()();
+
+                window.LatitudeCheckout.checkout = {
+                    shippingAmount: totals.base_shipping_amount,
+                    discount: totals.base_discount_amount,
+                    taxAmount: totals.base_tax_amount,
+                    subTotal: totals.base_subtotal,
+                    total: totals.base_grand_total,
+                };
+
+                $.ajax({
+                    url: window.checkoutConfig.latitudepayments.lc_script,
+                    dataType: "script",
+                    cache: true,
+                }).fail(function (xhr, status) {
+                    console.error("Could not Load latitude content. Failed with " + status);
+                });
             },
+
             getLogoUrl: function() {
                 return window.checkoutConfig.latitudepayments.latitude;
             },
+            
             PaymentFailed: function () {
                 var cancelUrl = document.URL.split('?')[1];
                 if(cancelUrl){

@@ -290,6 +290,16 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         );
     }
 
+    public function getScriptURL()
+    {
+        $isTest = (boolean)($this->getConfigData('test_mode', null, 'latitude') === '1');
+        $host = $isTest ? 
+            'https://develop.checkout.dev.merchant-services-np.lfscnp.com' 
+            : 
+            'https://checkout.latitudefinancial.com';
+        return $host. "/assets/content.js?platform=magento2&merchantId=".$this->getConfigData('merchant_id', null, 'latitude');
+    }
+
     public function makecurlCall($url, $options, $headers, $credentials, $body, $isPost = true, $methodCode = null)
     {
         $this->log('*** Making CURL Request ***', $methodCode);

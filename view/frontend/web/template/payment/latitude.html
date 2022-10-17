@@ -17,13 +17,12 @@
     </div>
 
     <div class="payment-method-content">
-        
         <span data-bind="html: getInstallmentText()"></span>
+        <div id="main-container"></div>
         
         <!-- ko foreach: getRegion('messages') -->
         <!-- ko template: getTemplate() --><!-- /ko -->
         <!--/ko-->
-        <div class="payment-method-billing-address" data-bind="afterRender: initPopup">
             <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
@@ -51,5 +50,6 @@
             </div>
         </div>
 
+        <div id="footer-container"></div>
     </div>
 </div>

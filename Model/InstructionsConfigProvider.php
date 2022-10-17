@@ -143,7 +143,12 @@ class InstructionsConfigProvider implements ConfigProviderInterface
                 'utilJs' => $this->helper->getUtilJs(),
                 'lpay_installment_block' => '<img class="lpay_snippet" src="'.$this->getSnippetImage().'" alt="LatitudePay" >',
                 'gpay_installment_block'    => '<img class="lpay_snippet" src="'.$this->getSnippetImage().'" alt="GenoaPay" >',
-                'lc_installment_block' => '<img class="lpay_snippet" src="'.$this->getSnippetImage().'" alt="LatitudePay" >',
+                'lc_script' => $this->helper->getScriptURL(),
+                'lc_options' => [
+                    "merchantId" => $this->helper->getConfigData('merchant_id', null, 'latitude'),
+                    "page" => "checkout",
+                    "currency" => $this->helper->getStoreCurrency()
+                ]
             ],
         ];
 
