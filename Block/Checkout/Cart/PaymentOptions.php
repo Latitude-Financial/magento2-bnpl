@@ -64,8 +64,13 @@ class PaymentOptions extends \Magento\Framework\View\Element\Template
      * @param string $methodCode
      * @return bool
      */
-    public function showOnCart()
+    public function showOnCart($methodCode=null)
     {
+        if ($methodCode)
+        {
+            return $this->helper->getConfigData('show_on_cart', null, $methodCode);
+        }
+
         return $this->helper->getConfigData('show_on_cart'); //based on whatever's active (depending on store's currency setting)
     }
 
@@ -95,6 +100,42 @@ class PaymentOptions extends \Magento\Framework\View\Element\Template
     {
         /** @noinspection PhpUndefinedMethodInspection */
         return $this->helper->getUtilJs();
+    }
+
+    public function getLCOptions($page)
+    {
+        return json_encode([
+            "merchantId" => $this->helper->getConfigData('merchant_id', null, 'latitude'),
+            "currency" => $this->helper->getStoreCurrency(),
+            "container" =>"latitude-banner-container",
+            "containerClass" => "",
+            "page" => $page,
+            "layout" => $this->helper->getConfigData('layout', null, 'latitude'),
+            "paymentOption" => $this->helper->getConfigData('plan_type', null, 'latitude'),
+            "promotionMonths" => $this->helper->getConfigData('plan_period', null, 'latitude'),
+            "minAmount" => $this->helper->getConfigData('minimum_amount', null, 'latitude'), 
+            "product" => [
+                "id" => 'cart',
+                "name" =>  'cart',
+                "category" => '',
+                "price" => $this->getAmount(),
+                "sku" => '',
+            ]
+        ]);
+    }
+
+    public function getLCMerchantID()
+    {
+       return $this->helper->getConfigData('merchant_id', null, 'latitude');
+    }
+
+    public function getLCHost()
+    {
+        $isTest = (boolean)($this->helper->getConfigData('test_mode', null, 'latitude') === '1');
+        return $isTest ? 
+            'https://develop.checkout.dev.merchant-services-np.lfscnp.com' 
+            : 
+            'https://checkout.latitudefinancial.com';
     }
 
     /**

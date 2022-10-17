@@ -10,5 +10,30 @@ $_helper    = $this->helper('LatitudeNew\Payment\Helper\Data');
         </div>
     </div>
 
+    <?php if ($block->showOnCart('latitude') == 1): ?>
+        <div id="latitude-banner-container" ></div>
+    <?php endif; ?>
+
+    <script>
+           window.LatitudeCheckout = <?php echo $block->getLCOptions('product'); ?>;
+           (function () {
+                function asyncLoad() {
+                    var curr = document.createElement("script");
+                    curr.type = "text/javascript";
+                    curr.async = true;
+                    curr.src = "<?=$block->getLCHost()?>/assets/content.js?platform=magento2&merchantId=<?=$block->getLCMerchantID()?>";
+                
+                    var scr = document.getElementsByTagName("script")[0];
+                    scr.parentNode.insertBefore(curr, scr);
+                }
+                
+                if (window.attachEvent) {
+                    window.attachEvent("onload", asyncLoad);
+                } else {
+                    window.addEventListener("load", asyncLoad, false);
+                }
+            })();
+    </script>
+
 
 

@@ -99,8 +99,13 @@ class PaymentOptions extends \Magento\Framework\View\Element\Template
      * @param string $methodCode
      * @return bool
      */
-    public function showOnPDP()
+    public function showOnPDP($methodCode = null)
     {
+        if ($methodCode)
+        {
+            return $this->helper->getConfigData('show_on_pdp', null, $methodCode);
+        }
+
         return $this->helper->getConfigData('show_on_pdp'); //based on whatever's active (depending on store's currency setting)
     }
 
@@ -130,6 +135,55 @@ class PaymentOptions extends \Magento\Framework\View\Element\Template
     {
         /** @noinspection PhpUndefinedMethodInspection */
         return $this->helper->getUtilJs();
+    }
+
+    protected function getPriceForLC()
+    {
+        $product = $this->getCurrentProduct();
+
+        if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+            return round((float)$product->getFinalPrice(), 2);
+        }
+
+        return round((float)$product->getPrice(), 2);
+    }
+
+    public function getLCOptions($page)
+    {
+        $product = $this->getCurrentProduct();
+
+        return json_encode([
+            "merchantId" => $this->helper->getConfigData('merchant_id', null, 'latitude'),
+            "currency" => $this->helper->getStoreCurrency(),
+            "container" =>"latitude-banner-container",
+            "containerClass" => "",
+            "page" => $page,
+            "layout" => $this->helper->getConfigData('layout', null, 'latitude'),
+            "paymentOption" => $this->helper->getConfigData('plan_type', null, 'latitude'),
+            "promotionMonths" => $this->helper->getConfigData('plan_period', null, 'latitude'),
+            "minAmount" => $this->helper->getConfigData('minimum_amount', null, 'latitude'), 
+            "product" => [
+                "id" => $product->getId() ? $product->getId() : '',
+                "name" =>  $product->getName() ? $product->getName() : '',
+                "category" =>  $product->getCategory() ? $product->getCategory() : '',
+                "price" => $this->getPriceForLC(),
+                "sku" =>  $product->getSku() ? $product->getSku() : '',
+            ]
+        ]);
+    }
+
+    public function getLCMerchantID()
+    {
+       return $this->helper->getConfigData('merchant_id', null, 'latitude');
+    }
+
+    public function getLCHost()
+    {
+        $isTest = (boolean)($this->helper->getConfigData('test_mode', null, 'latitude') === '1');
+        return $isTest ? 
+            'https://develop.checkout.dev.merchant-services-np.lfscnp.com' 
+            : 
+            'https://checkout.latitudefinancial.com';
     }
 
     /**

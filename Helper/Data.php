@@ -163,6 +163,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $this->scopeConfig->getValue('payment/latitude/active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
     }
 
+    public function getStoreCurrency(){
+        return $this->currentCurrencyCode;
+    }
+    
     /**
      * @return bullean
      */
