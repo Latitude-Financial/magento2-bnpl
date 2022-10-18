@@ -252,6 +252,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function getImageApiUrl($store = null)
     {
+        if (isset($this->supportedCurrencyCodes[$this->currentCurrencyCode])) {
+            $this->code = $this->supportedCurrencyCodes[$this->currentCurrencyCode];
+        }
         return $this->scopeConfig->getValue('payment/'.$this->code.'/image_api_url', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $store);
     }
 
