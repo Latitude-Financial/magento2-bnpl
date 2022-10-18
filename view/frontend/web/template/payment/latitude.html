@@ -13,43 +13,38 @@
         <label data-bind="attr: {'for': getCode()}" class="label">
             <span data-bind="text: getTitle()"></span>
         </label>
-        <img class="latitude-icon" data-bind="attr: {src: getLogoUrl(), alt: $t(getTitle())}" style="height:35px; margin-left:10px">
+        <img class="latitude-icon" data-bind="attr: {src: getLogoUrl(), alt: $t(getTitle())}" style="height:35px; margin-left:10px; margin-bottom:-13px">
     </div>
 
-    <div class="payment-method-content">
+    <div class="payment-method-content"
+        style="padding: 0 10px !important; max-width: 500px !important"
+    >
         <span data-bind="html: getInstallmentText()"></span>
         <div id="main-container"></div>
-        
-        <!-- ko foreach: getRegion('messages') -->
-        <!-- ko template: getTemplate() --><!-- /ko -->
-        <!--/ko-->
-            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
-            <!-- ko template: getTemplate() --><!-- /ko -->
-            <!--/ko-->
-        </div>
-        <div class="op-checkout-widget">
-        </div>
-        <div class="checkout-agreements-block">
-            <!-- ko foreach: $parent.getRegion('before-place-order') -->
-                <!-- ko template: getTemplate() --><!-- /ko -->
-            <!--/ko-->
-        </div>
-        <div class="actions-toolbar">
-            <div class="primary" >
-                <button class="action primary checkout"
-                        type="submit"
-                        data-bind="
-                        click: placeOrder,
-                        attr: {title: $t('Place Order')},
-                        enable: (getCode() == isChecked()),
-                        css: {disabled: !isPlaceOrderActionAllowed()}
-                        "
-                        disabled>
-                    <span data-bind="i18n: 'Place Order'"></span>
-                </button>
-            </div>
-        </div>
 
+        <div class="op-checkout-widget"></div>
+        <div class="checkout-agreements-block"></div>
+
+        <div class="primary" >
+            <button class="action primary checkout"
+                type="submit"
+                data-bind="
+                click: placeOrder,
+                attr: {title: $t('Place Order')},
+                enable: (getCode() == isChecked()),
+                css: {disabled: !isPlaceOrderActionAllowed()}
+                "
+                style="
+                width: 100% !important;
+                max-width: 400px !important;
+                font-size: 18px !important;
+                line-height: 1 !important;
+                padding: 14px 17px !important;
+                "
+                disabled>
+                <span data-bind="i18n: 'Choose a plan'"></span>
+            </button>
+        </div>
         <div id="footer-container"></div>
     </div>
 </div>

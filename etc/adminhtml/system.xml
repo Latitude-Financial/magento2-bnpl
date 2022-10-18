@@ -3,7 +3,7 @@
     <system>
         <section id="payment" >
             <group id="latitude_section" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>LatitudePay/Genoapay (New)</label>
+                <label>Latitude Payment Service</label>
                 <attribute type="expanded">1</attribute>
                 
                 <field id="version" type="text" translate="label comment" sortOrder="0" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -14,7 +14,7 @@
                     <label>
                         <![CDATA[
                             <div class="latitude-payment-logo"></div>
-                            <div class="latitude-payment-byline">Use LatitudePay to spread the cost of your purchases over 10 weeks.</div>
+                            <div class="latitude-payment-byline">With LatitudePay you can pay for your products or services over 10 weekly payments, with NO interest and NO fees</div>
                         ]]>
                     </label>
                     <fieldset_css>complex latitude-payment-section</fieldset_css>
@@ -130,7 +130,7 @@
 
                 <group id="genoapay" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>
-                        <![CDATA[<div class="genoapay-payment-logo"></div><div class="genoapay-payment-byline">Pay with Genoapay at partnered stores over 10 weekly payments with no interest.</div>]]></label>
+                        <![CDATA[<div class="genoapay-payment-logo"></div><div class="genoapay-payment-byline">With Genoapay you can pay for your products or services over 10 weekly payments</div>]]></label>
                     <fieldset_css>complex genoapay-payment-section</fieldset_css>
                     <frontend_model>LatitudeNew\Payment\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
 
