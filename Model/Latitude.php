@@ -172,15 +172,15 @@ class Latitude extends \Magento\Payment\Model\Method\AbstractMethod
             );
 
         $grand_total = $order->getGrandTotal();
-        $total_paid = $order->getTotalPaid();
-        $remaining_amt = $grand_total - $total_paid;
+        $total_invoiced = $order->getTotalInvoiced();
+        $remaining_amt = $grand_total - $total_invoiced - $amount;
 
         if ($remaining_amt == 0) {
             $reason = 'Full Capture';
         } 
         else if ($remaining_amt < 0) {
             throw new \Magento\Framework\Exception\LocalizedException(
-                __('Error issuing refund - Grandtotal: '.$grand_total.', Total Refunded: '.$total_refunded.', Amount: '.$amount)
+                __('Error issuing capture - Grandtotal: '.$grand_total.', Total Paid: '.$total_invoiced.', Amount: '.$amount)
             );
         }
         else {

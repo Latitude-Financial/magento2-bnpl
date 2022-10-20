@@ -106,6 +106,9 @@ class PaymentOptions extends \Magento\Framework\View\Element\Template
             return $this->helper->getConfigData('show_on_pdp', null, $methodCode);
         }
 
+        if (!$this->helper->isLatitudepayEnabled() && !$this->helper->isGenoapayEnabled())
+            return 0;
+
         return $this->helper->getConfigData('show_on_pdp'); //based on whatever's active (depending on store's currency setting)
     }
 

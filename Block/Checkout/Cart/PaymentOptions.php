@@ -71,6 +71,9 @@ class PaymentOptions extends \Magento\Framework\View\Element\Template
             return $this->helper->getConfigData('show_on_cart', null, $methodCode);
         }
 
+        if (!$this->helper->isLatitudepayEnabled() && !$this->helper->isGenoapayEnabled())
+            return 0;
+            
         return $this->helper->getConfigData('show_on_cart'); //based on whatever's active (depending on store's currency setting)
     }
 
