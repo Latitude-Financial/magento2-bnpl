@@ -161,9 +161,10 @@ class Latitude extends \Magento\Payment\Model\Method\AbstractMethod
         $gatewayReference = $payment->getAdditionalInformation('gateway_reference');
 
         if (!$transId)
-            throw new \Magento\Framework\Exception\LocalizedException(
-                __('Error capturing payment - no Transaction Id')
-            );
+            return $this; //in case instant
+            // throw new \Magento\Framework\Exception\LocalizedException(
+            //     __('Error capturing payment - no Transaction Id')
+            // );
 
         if (!$gatewayReference)
             throw new \Magento\Framework\Exception\LocalizedException(
