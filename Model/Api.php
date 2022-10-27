@@ -148,6 +148,15 @@ class Api extends \Magento\Framework\Model\AbstractModel
         return hash_hmac('sha256', str_replace(' ', '',trim($progress)), $apiSecret);
     }
 
+    function sanitizeDOB($dob){
+        if ($dob === ''){
+            return $dob;
+        }
+
+        $epoch = strtotime($dob);
+        return date( "Y-m-d", $epoch );
+    }
+
     /**
      * Get purchase redirect url
      */
@@ -202,7 +211,7 @@ class Api extends \Magento\Framework\Model\AbstractModel
                         "postcode" => $billing['postcode'],
                         "countryCode" => $billing['country_id']
                     ],
-                    "dateOfBirth" => $order['customer_dob'] ? $order['customer_dob'] : ''
+                    "dateOfBirth" => $this->sanitizeDOB($order['customer_dob'] ? $order['customer_dob'] : '')
                 ],
                 "shippingAddress" => [
                     "addressLine1" => $shipping['street'],
