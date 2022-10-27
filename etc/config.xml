@@ -14,7 +14,7 @@
                 <active>1</active>
                 <order_status>pending_latitude_approval</order_status>
                 <title>LatitudePay</title>
-                <version>2.0.7</version>
+                <version>2.0.8</version>
                 <can_use_checkout>1</can_use_checkout>
                 <payment_action>true</payment_action>
                 <line_items_enabled>1</line_items_enabled>

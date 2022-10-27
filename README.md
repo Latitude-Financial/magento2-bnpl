@@ -21,6 +21,13 @@ Tested up to: Magento 2.4.4.
 
 ## Changelog
 
+### 2.0.8
+- 28 Oct 2022
+- Sanitize DOB to always be yyyy-mm-dd format
+
+<details>
+<summary>Older versions</summary>
+
 ### 2.0.7
 - 19 July 2022
 - Compatibility with Magento 2.4.4
@@ -29,9 +36,6 @@ Tested up to: Magento 2.4.4.
 - Address base url information source to window.BASE_URL
 - Updated payment group from offline to installment
 - Add log to install module
-
-<details>
-<summary>Older versions</summary>
 
 ### 2.0.6
 - 31 March 2022
